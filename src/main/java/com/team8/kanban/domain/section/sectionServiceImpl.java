@@ -14,18 +14,21 @@ public class sectionServiceImpl implements SectionService {
 
     private final SectionRepository sectionRepository;
 
+    @Transactional
     @Override
     public SectionResponseDto createSection(SectionRequestDto requestDto) {
         Section section = sectionRepository.save(new Section(requestDto.getColumnName()));
         return new SectionResponseDto(section);
     }
 
+    @Transactional
     @Override
     public void deleteSection(Long sectionId) {
         Section section = findById(sectionId);
         sectionRepository.delete(section);
     }
 
+    @Transactional
     @Override
     public SectionResponseDto updateSection(Long sectionId, SectionRequestDto requestDto) {
         Section section = findById(sectionId);

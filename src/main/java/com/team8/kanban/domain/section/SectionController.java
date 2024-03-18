@@ -3,6 +3,7 @@ package com.team8.kanban.domain.section;
 
 import com.team8.kanban.global.exception.CommonResponse;
 import com.team8.kanban.global.security.UserDetailsImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -11,10 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-//boards id 예시로 추가
-@RequestMapping("/boards/1")
+@RequiredArgsConstructor
+@RequestMapping("/boards")
 public class SectionController {
-    private sectionServiceImpl sectionServiceImpl;
+
+    private final SectionService sectionServiceImpl;
 
     @PostMapping("/sections")
     public ResponseEntity<CommonResponse<SectionResponseDto>> createSection(
