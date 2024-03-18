@@ -18,7 +18,7 @@ public class CommentServiceImpl implements CommentService{
     public CommentResponse create(User user, CommentRequest commentRequest , Long CardId) {
         Comment createComment = new Comment(commentRequest.getContent(), user);
         Comment savedComment = commentRepository.save(createComment);
-        return new CommentResponse(savedComment);
+        return new CommentResponse(savedComment,user);
     }
 
     public CommentResponse update(User user,Long id,CommentRequest updateCommentRequest, Long CardId) {
@@ -29,7 +29,7 @@ public class CommentServiceImpl implements CommentService{
             throw new IllegalArgumentException("자신의 댓글만 수정 가능합니다.");
         }
         findComment.updateContent(updateCommentRequest.getContent());
-        return new CommentResponse(findComment);
+        return new CommentResponse(findComment,user);
     }
     public CommentResponse delete(User user,Long id, Long CardId){
         Comment findComment = commentRepository.findById(id).orElseThrow(
@@ -39,6 +39,6 @@ public class CommentServiceImpl implements CommentService{
             throw new IllegalArgumentException("자신의 댓글만 수정 가능합니다.");
         }
         commentRepository.delete(findComment);
-        return new CommentResponse(findComment);
+        return new CommentResponse(findComment,user);
     }
 }
