@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,10 +20,10 @@ public class CardController {
     private final CardService cardService;
     //카드 조회
 
+
     //카드 개별조회
 
     //카드 입력
-    @Transactional
     @PostMapping
     public ResponseEntity<CommonResponse<CardResponse>> createCard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -37,7 +36,6 @@ public class CardController {
     }
 
     //카드 수정
-    @Transactional
     @PatchMapping("/{cardId}")
     public ResponseEntity<CommonResponse<CardResponse>> updateCard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -51,7 +49,6 @@ public class CardController {
     }
 
     //카드 삭제
-    @Transactional
     @DeleteMapping("/{cardId}")
     public ResponseEntity<CommonResponse<Boolean>> deleteCard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
