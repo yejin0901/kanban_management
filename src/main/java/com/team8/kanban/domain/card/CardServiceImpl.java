@@ -4,9 +4,10 @@ import com.team8.kanban.domain.card.dto.CardResponse;
 import com.team8.kanban.domain.card.dto.CreateCardRequest;
 import com.team8.kanban.domain.card.dto.UpdateCardRequest;
 import com.team8.kanban.domain.user.User;
-import com.team8.kanban.global.exception.CommonResponse;
+import com.team8.kanban.global.entity.ColorEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,33 +16,35 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
 
     @Override
-    public CommonResponse<CardResponse> createCard(User user, CreateCardRequest request) {
+    @Transactional
+    public CardResponse createCard(User user, CreateCardRequest request) {
 
-        Card newCard = toEntity(request);
-        cardRepository.save(newCard);
+        Card newCard = toEntity(request, user);
+        cardRepository.save(newCard); //여기까진 문제없고
 
-        return new CommonResponse<>("Card 입력 완료", toResponse(newCard));
+        return toResponse(newCard);
     }
 
     @Override
-    public CommonResponse<CardResponse> updateCard(User user, UpdateCardRequest request, Long cardId) {
+    @Transactional
+    public CardResponse updateCard(User user, UpdateCardRequest request, Long cardId) {
         Card updateCard = findCard(cardId);
         checkOwnerCard(user.getId(), cardId);
 
         updateCard.update(request);
         cardRepository.save(updateCard);
 
-        return new CommonResponse<>("Card 수정 완료", toResponse(updateCard));
-
+        return toResponse(updateCard);
     }
 
     @Override
-    public CommonResponse<Boolean> deleteCard(User user, Long cardId) {
+    @Transactional
+    public Boolean deleteCard(User user, Long cardId) {
         Card deleteCard = findCard(cardId);
         checkOwnerCard(user.getId(), cardId);
 
         cardRepository.delete(deleteCard);
-        return new CommonResponse<>("Card 삭제 완료", true);
+        return true;
     }
 
 
@@ -61,17 +64,20 @@ public class CardServiceImpl implements CardService {
                 .cardId(card.getCardId())
                 .cardName(card.getCardName())
                 .description(card.getDescription())
-                .expiredDate(card.getExpiredDate().atStartOfDay())
+                .userName(card.getUser().getUsername())
+                .expiredDate(card.getExpiredDate())
                 .createdAt(card.getCreatedAt())
                 .modifiedAt(card.getModifiedAt())
                 .build();
     }
 
-    private Card toEntity(CreateCardRequest request) {
+    private Card toEntity(CreateCardRequest request, User user) {
         return Card.builder()
                 .cardName(request.getCardName())
                 .description(request.getDescription())
+                .user(user)
                 .expiredDate(request.getExpiredDate())
+                .colorEnum(ColorEnum.valueOf(request.getColor()))
                 .build();
     }
 }

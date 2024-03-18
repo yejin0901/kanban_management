@@ -7,8 +7,10 @@ import com.team8.kanban.global.exception.CommonResponse;
 import com.team8.kanban.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,27 +24,42 @@ public class CardController {
     //카드 개별조회
 
     //카드 입력
+    @Transactional
     @PostMapping
     public ResponseEntity<CommonResponse<CardResponse>> createCard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody CreateCardRequest request) {
-        return ResponseEntity.status(200).body(cardService.createCard(userDetails.getUser(), request));
+        return ResponseEntity.status(HttpStatus.OK.value())
+                .body(CommonResponse.<CardResponse>builder()
+                        .msg("Card 생성 성공")
+                        .data(cardService.createCard(userDetails.getUser(), request))
+                        .build());
     }
 
     //카드 수정
+    @Transactional
     @PatchMapping("/{cardId}")
     public ResponseEntity<CommonResponse<CardResponse>> updateCard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody UpdateCardRequest request,
             @PathVariable Long cardId) {
-        return ResponseEntity.status(200).body(cardService.updateCard(userDetails.getUser(), request, cardId));
+        return ResponseEntity.status(HttpStatus.OK.value())
+                .body(CommonResponse.<CardResponse>builder()
+                        .msg("Card 수정 성공")
+                        .data(cardService.updateCard(userDetails.getUser(), request, cardId))
+                        .build());
     }
 
     //카드 삭제
+    @Transactional
     @DeleteMapping("/{cardId}")
     public ResponseEntity<CommonResponse<Boolean>> deleteCard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long cardId) {
-        return ResponseEntity.status(200).body(cardService.deleteCard(userDetails.getUser(), cardId));
+        return ResponseEntity.status(HttpStatus.OK.value()).
+                body(CommonResponse.<Boolean>builder()
+                        .msg("Card 삭제 성공")
+                        .data(cardService.deleteCard(userDetails.getUser(), cardId))
+                        .build());
     }
 }
