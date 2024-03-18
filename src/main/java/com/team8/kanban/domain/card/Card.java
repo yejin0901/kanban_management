@@ -1,7 +1,6 @@
 package com.team8.kanban.domain.card;
 
 import com.team8.kanban.domain.card.dto.UpdateCardRequest;
-import com.team8.kanban.domain.user.User;
 import com.team8.kanban.global.entity.ColorEnum;
 import com.team8.kanban.global.entity.TimeStamped;
 import jakarta.persistence.*;
@@ -28,9 +27,9 @@ public class Card extends TimeStamped {
 
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id")
-    private User user;
+    private Long userid;
+
+    private String username;
 
     private LocalDateTime expiredDate;
 
