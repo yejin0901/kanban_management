@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -14,7 +14,7 @@ public class CreateCardRequest {
     @NotEmpty
     private String description;
     @NotEmpty
-    private LocalDate expiredDate;
+    private LocalDateTime expiredDate;
     @NotEmpty
     private String color;
 }
