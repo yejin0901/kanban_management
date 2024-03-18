@@ -5,7 +5,25 @@ import com.team8.kanban.domain.card.dto.CreateCardRequest;
 import com.team8.kanban.domain.card.dto.UpdateCardRequest;
 import com.team8.kanban.domain.user.User;
 
+import java.util.List;
+
 public interface CardService {
+
+    /**
+     * 전체 카드 조회
+     *
+     * @return 전체 Card Entity
+     */
+    List<CardResponse> getCards();
+
+    /**
+     * 단일 카드 조회
+     *
+     * @param cardId 조회할 카드 번호
+     * @return 단일 Card Entity
+     */
+    CardResponse getCard(Long cardId);
+
 
     /**
      * 카드 신규 생성

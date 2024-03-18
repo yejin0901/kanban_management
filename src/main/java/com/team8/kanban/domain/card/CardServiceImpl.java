@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CardServiceImpl implements CardService {
@@ -16,11 +18,20 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
 
     @Override
+    public List<CardResponse> getCards() {
+        return cardRepository.findCards();
+    }
+
+    @Override
+    public CardResponse getCard(Long cardId) {
+        return cardRepository.findCard(cardId);
+    }
+
+    @Override
     @Transactional
     public CardResponse createCard(User user, CreateCardRequest request) {
-
         Card newCard = toEntity(request, user);
-        cardRepository.save(newCard); //여기까진 문제없고
+        cardRepository.save(newCard);
 
         return toResponse(newCard);
     }
@@ -29,7 +40,7 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public CardResponse updateCard(User user, UpdateCardRequest request, Long cardId) {
         Card updateCard = findCard(cardId);
-        checkOwnerCard(user.getId(), cardId);
+        checkOwnerCard(user.getId(), updateCard.getUserid());
 
         updateCard.update(request);
         cardRepository.save(updateCard);
@@ -41,7 +52,7 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public Boolean deleteCard(User user, Long cardId) {
         Card deleteCard = findCard(cardId);
-        checkOwnerCard(user.getId(), cardId);
+        checkOwnerCard(user.getId(), deleteCard.getUserid());
 
         cardRepository.delete(deleteCard);
         return true;
@@ -53,8 +64,8 @@ public class CardServiceImpl implements CardService {
                 () -> new IllegalArgumentException("해당하는 카드가 없습니다."));
     }
 
-    private void checkOwnerCard(Long userId, Long cardId) {
-        if (!cardId.equals(userId)) {
+    private void checkOwnerCard(Long userId, Long cardByUserId) {
+        if (!cardByUserId.equals(userId)) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
     }
@@ -64,7 +75,7 @@ public class CardServiceImpl implements CardService {
                 .cardId(card.getCardId())
                 .cardName(card.getCardName())
                 .description(card.getDescription())
-                .userName(card.getUser().getUsername())
+                .username(card.getUsername())
                 .expiredDate(card.getExpiredDate())
                 .createdAt(card.getCreatedAt())
                 .modifiedAt(card.getModifiedAt())
@@ -75,7 +86,8 @@ public class CardServiceImpl implements CardService {
         return Card.builder()
                 .cardName(request.getCardName())
                 .description(request.getDescription())
-                .user(user)
+                .userid(user.getId())
+                .username(user.getUsername())
                 .expiredDate(request.getExpiredDate())
                 .colorEnum(ColorEnum.valueOf(request.getColor()))
                 .build();

@@ -17,7 +17,7 @@ public class CardResponse {
     private Long cardId;
     private String cardName;
     private String description;
-    private String userName;
+    private String username;
     private LocalDateTime expiredDate;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;

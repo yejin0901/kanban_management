@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/cards")
@@ -19,9 +21,26 @@ public class CardController {
 
     private final CardService cardService;
     //카드 조회
-
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<CardResponse>>> getCards() {
+        return ResponseEntity.status(HttpStatus.OK.value())
+                .body(CommonResponse.<List<CardResponse>>builder()
+                        .msg("조회 되었습니다.")
+                        .data(cardService.getCards())
+                        .build());
+    }
 
     //카드 개별조회
+    @GetMapping("/{cardId}")
+    public ResponseEntity<CommonResponse<CardResponse>> getCard(
+            @PathVariable Long cardId) {
+        return ResponseEntity.status(HttpStatus.OK.value())
+                .body(CommonResponse.<CardResponse>builder()
+                        .msg("조회 되었습니다.")
+                        .data(cardService.getCard(cardId))
+                        .build());
+    }
+
 
     //카드 입력
     @PostMapping
