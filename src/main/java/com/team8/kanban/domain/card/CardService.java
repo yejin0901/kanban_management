@@ -1,5 +1,8 @@
 package com.team8.kanban.domain.card;
 
+import com.team8.kanban.domain.card.dto.CardResponse;
+import com.team8.kanban.domain.card.dto.CreateCardRequest;
+import com.team8.kanban.domain.card.dto.UpdateCardRequest;
 import com.team8.kanban.domain.user.User;
 import com.team8.kanban.global.exception.CommonResponse;
 

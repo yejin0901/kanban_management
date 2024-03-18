@@ -1,5 +1,6 @@
 package com.team8.kanban.domain.card;
 
+import com.team8.kanban.domain.card.dto.UpdateCardRequest;
 import com.team8.kanban.global.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

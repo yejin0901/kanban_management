@@ -1,4 +1,4 @@
-package com.team8.kanban.domain.card;
+package com.team8.kanban.domain.card.dto;
 
 import lombok.Builder;
 import lombok.Getter;
