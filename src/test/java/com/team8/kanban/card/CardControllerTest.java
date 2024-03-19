@@ -72,7 +72,7 @@
 //                .expiredDate(LocalDateTime.now().plusDays(1)).createdAt(LocalDateTime.now()).modifiedAt(LocalDateTime.now()).build();
 //        CardResponse response2 = CardResponse.builder().cardId(2L).cardName("testcard2").description("testdes2").username("dosal")
 //                .expiredDate(LocalDateTime.now().plusDays(1)).createdAt(LocalDateTime.now()).modifiedAt(LocalDateTime.now()).build();
-//        given(cardService.getCards()).willReturn(responseList);
+//        given(cardService.getCards(any(Long.class))).willReturn(responseList);
 //
 //        //when-then
 //        mockMvc.perform(get("/cards"))
@@ -87,7 +87,7 @@
 //    void test2() throws Exception {
 //        //given
 //        List<CardResponse> responseList = new ArrayList<>();
-//        given(cardService.getCards()).willReturn(responseList);
+//        given(cardService.getCards(any(Long.class))).willReturn(responseList);
 //
 //        //when-then
 //        mockMvc.perform(get("/cards"))
