@@ -40,42 +40,60 @@ public class SectionServiceImpl implements SectionService {
 
     public List<SectionResponseDto> sortPos() {
         long start = sectionRepository.findHeadEntities().getId(); //head
-        Section current = findById(start);//head cur
+        Section cur = findById(start);//head cur
         List<Section> orderedList = new ArrayList<>();
 
-        while (current != null) {
-            orderedList.add(current);
-            Long nextSection = current.getNext(); // getNext()는 다음 section 값을 반환하는 메소드
+        while (cur != null) {
+            orderedList.add(cur);
+            Long nextSection = cur.getNext();
             if (nextSection == null) {
                 break;
             }
-            current = findById(nextSection);
+            cur = findById(nextSection);
         }
         return orderedList.stream().map(SectionResponseDto::new).toList();
     }
 
-    // 2 3 4 5 6 -> 2 4 3 5 6
+    /* Linked List SWAP CASE(4)
+    1. adjacent
+    2, selected prev is null
+    3. change prev is null
+    4. normal
+     */
     @Transactional
-    public List<SectionResponseDto> updatePos(Long selectedSectionId, Long changePos) {
-        Section selectedSection = findById(selectedSectionId); //4
-        Section changePosSection = findById(changePos);//3
+    public List<SectionResponseDto> updateNextpos(Long selectPos, Long changePos) {
+        Section selectedSection = findById(selectPos);
+        Section changePosSection = findById(changePos);
 
-        Section selectedPrevSection = findByNext(selectedSectionId);
-        System.out.println(selectedPrevSection.getId());
+        Section selectedPrevSection = findByNext(selectPos);
         Section changePrevSection = findByNext(changePos);
-        System.out.println(changePrevSection.getId());
 
-        selectedPrevSection.updatePos(changePos);
-        changePrevSection.updatePos(selectedSectionId);
-
-        Long selectedSectionNext = selectedSection.getNext();
-        Long changePosSectionNext = changePosSection.getNext();
-
-        //update
-        selectedSection.updatePos(changePosSectionNext);
-        changePosSection.updatePos(selectedSectionNext);
-
+        if (selectedPrevSection != null && selectedPrevSection.getId().equals(changePos)) {
+            swapAdjacent(changePrevSection, selectedSection, changePosSection);
+        } else if (changePrevSection != null && changePrevSection.getId().equals(selectPos)) {
+            swapAdjacent(selectedPrevSection, changePosSection, selectedSection);
+        } else {
+            if (selectedPrevSection != null) {
+                selectedPrevSection.updatePos(changePos);
+            }
+            if (changePrevSection != null) {
+                changePrevSection.updatePos(selectPos);
+            } else {
+                Long tempNext = selectedSection.getNext();
+                changePosSection.updatePos(tempNext);
+                selectedSection.updatePos(null);
+            }
+            Long tempNext = selectedSection.getNext();
+            selectedSection.updatePos(changePosSection.getNext());
+            changePosSection.updatePos(tempNext);
+        }
        return sortPos();
+    }
+
+    private void swapAdjacent(Section prev, Section a, Section b) {
+        b.updatePos(a.getNext());
+        prev.updatePos(a.getId());
+        a.updatePos(b.getId());
     }
 
     @Override
@@ -89,7 +107,9 @@ public class SectionServiceImpl implements SectionService {
 
     private Section findByNext(Long pos) {
         System.out.println("없음");
-        return sectionRepository.findByNext(pos).orElseThrow(() -> new NotFoundException(SectionErrorCode.SECTION_NOT_FOUND));
+        return sectionRepository.findByNext(pos).orElse(null);
     }
+
+
 
 }
