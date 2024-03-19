@@ -33,15 +33,18 @@ class CardRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
+    private Card card1;
+    private Card card2;
+    private User loginUser;
+
+
     void setup() {
-        User loginUser = User.builder().id(1L).username("dosal").password("123456789").build();
+        loginUser = User.builder().username("dosal").password("123456789").build();
         userRepository.save(loginUser);
-        User anotherUser = User.builder().id(2L).username("hehe").password("123456789").build();
-        userRepository.save(anotherUser);
-        Card card1 = Card.builder().cardId(1L).cardName("testcard1").description("testdes1").userid(1L).username("dosal")
+        card1 = Card.builder().cardName("testcard1").description("testdes1").userid(loginUser.getId()).username("dosal")
                 .expiredDate(LocalDateTime.now().plusDays(1)).colorEnum(RED).build();
         cardRepository.save(card1);
-        Card card2 = Card.builder().cardId(2L).cardName("testcard2").description("testdes2").userid(1L).username("dosal")
+        card2 = Card.builder().cardName("testcard2").description("testdes2").userid(loginUser.getId()).username("dosal")
                 .expiredDate(LocalDateTime.now().plusDays(1)).colorEnum(BLACK).build();
         cardRepository.save(card2);
     }
@@ -51,7 +54,6 @@ class CardRepositoryTest {
     void test1() {
         //given
         setup();
-
         //when
         List<CardResponse> responses = cardRepositoryImpl.findCards();
 
@@ -63,7 +65,6 @@ class CardRepositoryTest {
     @DisplayName("전체 카드 조회 -카드가없을때")
     void test2() {
         //given
-
         //when
         List<CardResponse> responses = cardRepositoryImpl.findCards();
 
@@ -76,7 +77,7 @@ class CardRepositoryTest {
     void test3() {
         //given
         setup();
-        Long cardId = 1L;
+        Long cardId = card1.getCardId();
 
         //when
         CardResponse response = cardRepositoryImpl.findCard(cardId);
@@ -99,19 +100,4 @@ class CardRepositoryTest {
         //then
         assertEquals("해당하는 카드가 없습니다.", exception.getMessage());
     }
-
-    @Test
-    @DisplayName("")
-    void test5() {
-        //given
-        Long cardId = 1L;
-
-        //when
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, ()
-                -> cardRepositoryImpl.findCard(cardId));
-
-        //then
-        assertEquals("해당하는 카드가 없습니다.", exception.getMessage());
-    }
-
 }
