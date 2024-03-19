@@ -4,10 +4,11 @@ import com.team8.kanban.global.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "sections")
 public class Section extends TimeStamped {
     @Id
@@ -15,7 +16,13 @@ public class Section extends TimeStamped {
     private Long id;
 
     @Column(nullable = false)
-    private String columnName;
+    private String sectionName;
+
+    @Column
+    private Long prev;
+
+    @Column
+    private Long next;
 
 
 // Entity 생성 후 추가
@@ -27,11 +34,15 @@ public class Section extends TimeStamped {
 //    @JoinColumn(name = "card_id", nullable = false)
 //    private Card card;
 
-    public Section(String name) {
-        this.columnName = name;
+    public Section(SectionRequestDto requestDto) {
+        this.sectionName = requestDto.getSectionName();
     }
 
-    public void update(String columnName) {
-        this.columnName = columnName;
+    public void updateName(String sectionName) {
+        this.sectionName = sectionName;
+    }
+    public void updatePos(Long prev, Long next) {
+        this.prev = prev;
+        this.next = next;
     }
 }

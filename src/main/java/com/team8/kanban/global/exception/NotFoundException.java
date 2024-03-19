@@ -1,7 +1,12 @@
 package com.team8.kanban.global.exception;
 
 
+import com.team8.kanban.global.exception.error.SectionErrorCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Getter
+@RequiredArgsConstructor
 public class NotFoundException extends RuntimeException{
-   public NotFoundException(String message){super(message);}
+   private final SectionErrorCode errorCode;
 }
