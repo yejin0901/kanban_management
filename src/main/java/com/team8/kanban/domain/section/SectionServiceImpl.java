@@ -77,7 +77,7 @@ public class SectionServiceImpl implements SectionService {
 
 
         return sectionRepository.findAll().stream().map(SectionResponseDto::new).toList();
-//        return sortPos();
+       return sortPos();
     }
 
     @Override
