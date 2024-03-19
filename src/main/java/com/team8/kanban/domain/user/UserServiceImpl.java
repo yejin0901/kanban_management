@@ -60,7 +60,6 @@ public class UserServiceImpl implements UserService{
         if (!passwordEncoder.matches(deleteRequest.getPassword(),user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
         }
-
         userRepository.delete(user);
         return new UserResponse(user);
     }
