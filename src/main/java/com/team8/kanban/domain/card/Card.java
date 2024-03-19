@@ -49,4 +49,9 @@ public class Card extends TimeStamped {
     public void setPosition(long position) {
         this.position = position;
     }
+
+    public void setSection(long newSectionId) {
+        this.sectionId = newSectionId;
+
+    }
 }

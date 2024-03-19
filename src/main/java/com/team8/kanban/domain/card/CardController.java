@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -79,14 +80,28 @@ public class CardController {
                         .build());
     }
 
+    //position 변경
     @PostMapping("/change-position")
     public ResponseEntity<CommonResponse<List<CardResponse>>> changePosition(
-            @Valid @RequestBody PositionChangeRequest request
-    ) {
+            @Valid @RequestBody PositionChangeRequest request) {
         return ResponseEntity.status(HttpStatus.OK.value())
                 .body(CommonResponse.<List<CardResponse>>builder()
                         .msg("position이 변경되었습니다.")
                         .data(cardService.changePosition(request.getSectionId(), request.getPositionSet()))
+                        .build());
+    }
+
+    //SectionId 변경
+    @PostMapping("/change-section")
+    public ResponseEntity<CommonResponse<List<CardResponse>>> changeSection(
+            @Valid @RequestBody SectionChangeRequest request) {
+        return ResponseEntity.status(HttpStatus.OK.value())
+                .body(CommonResponse.<List<CardResponse>>builder()
+                        .msg("section이 변경되었습니다.")
+                        .data(cardService.changeSection(request.getCardId(),
+                                request.getNewSectionId(),
+                                request.getNewSectionIdSet(),
+                                request.getCardPositionId()))
                         .build());
     }
 }

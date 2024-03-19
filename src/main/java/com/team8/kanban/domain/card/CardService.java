@@ -58,10 +58,21 @@ public interface CardService {
      * 카드 position 변경
      *
      * @param sectionId position을 변경할 sectionId
-     * @param cardIdSet id가 입력된 순서대로 position을 순차입력
-     * @return 해당
+     * @param cardIdSet position으로 정렬했을때의 cardId값의 순서
+     * @return 변경된 position으로 정렬
      */
     List<CardResponse> changePosition(Long sectionId, String cardIdSet);
 
+
+    /**
+     * 카드 section 변경
+     *
+     * @param cardId          section을 변경할 cardId
+     * @param newSectionId    이동한 Section Id
+     * @param newSectionIdSet 바뀐 Section의 현재 position으로 정렬했을때의 cardId값의 순서
+     * @param cardPosition  이동한 Section의 position
+     * @return List<CardResponse> 변경된 section을 정렬 후 조회
+     */
+    List<CardResponse> changeSection(Long cardId, Long newSectionId, String newSectionIdSet, Long cardPosition);
 }
 

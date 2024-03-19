@@ -80,6 +80,43 @@ public class CardServiceImpl implements CardService {
         return cardRepository.findCards(sectionId);
     }
 
+    @Override
+    public List<CardResponse> changeSection(Long cardId, Long newSectionId, String newSectionIdSet, Long cardPosition) {
+        Card sectionUpdateCard = findCard(cardId);
+        sectionUpdateCard.setSection(newSectionId);
+        //cardId 10, cardPositionId 2 ,newSectionIdSet 9_8_7_6_5_4 -> 9_8_10_7_6_5_4
+        long[] idByCard = Arrays.stream(newSectionIdSet.split("_"))
+                .mapToLong(Long::parseLong)
+                .toArray();
+
+        /////////////////////
+
+        long[] idByCardAddPositionId = new long[idByCard.length + 1];
+        for (int i = 0; i < cardPosition; i++) {
+            idByCardAddPositionId[i] = idByCard[i];
+        }
+        idByCardAddPositionId[Math.toIntExact(cardPosition)] = cardId;
+        for (int i = (int) (cardPosition + 1); i < idByCardAddPositionId.length; i++) {
+            idByCardAddPositionId[i] = idByCard[i - 1];
+        }
+
+        List<Card> positionUpdateByCards = cardRepository.findCardsBySectionId(newSectionId);
+
+        for (int i = 0; i < idByCard.length; i++) {
+            //positionUpdateByCard: 1 2 3 14 13 12
+            for (int j = 0; j < positionUpdateByCards.size(); j++) {
+                if (idByCard[i] == positionUpdateByCards.get(j).getCardId()) {
+                    positionUpdateByCards.get(j).setPosition(i);
+                    continue;
+                }
+            }
+        }
+        cardRepository.saveAll(positionUpdateByCards);
+
+
+        return cardRepository.findCards(newSectionId);
+    }
+
 
     private Card findCard(Long cardId) {
         return cardRepository.findById(cardId).orElseThrow(
