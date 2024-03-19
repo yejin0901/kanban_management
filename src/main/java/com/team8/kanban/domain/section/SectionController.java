@@ -10,12 +10,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/boards")
+@RequestMapping("/boards/sections")
 public class SectionController {
 
-    private final SectionServiceImpl sectionServiceImpl;
+    private final SectionService sectionServiceImpl;
 
-    @PostMapping("/sections")
+    @PostMapping("")
     public ResponseEntity<CommonResponse<SectionResponseDto>> createSection(
             @RequestBody SectionRequestDto requestDto
     ) {
@@ -28,7 +28,7 @@ public class SectionController {
 
     }
 
-    @GetMapping("/all-sections")
+    @GetMapping("")
     public ResponseEntity<CommonResponse<List<SectionResponseDto>>> getAllSection() {
         List<SectionResponseDto> response = sectionServiceImpl.getAllSection();
         return ResponseEntity.status(HttpStatus.OK.value())
@@ -39,19 +39,7 @@ public class SectionController {
 
     }
 
-//    @GetMapping("/pos-sections")
-//    public ResponseEntity<CommonResponse<List<SectionResponseDto>>> getPosSection() {
-//        List<SectionResponseDto> response = sectionServiceImpl.sortPos();
-//        return ResponseEntity.status(HttpStatus.OK.value())
-//                .body(CommonResponse.<List<SectionResponseDto>>builder()
-//                        .msg("섹션이 정렬" +
-//                                "조회되었습니다.")
-//                        .data(response)
-//                        .build());
-//
-//    }
-
-    @DeleteMapping("/sections/{sectionId}")
+    @DeleteMapping("/{sectionId}")
     public ResponseEntity<CommonResponse<SectionResponseDto>> deleteSection(
             @PathVariable Long sectionId
 
@@ -64,7 +52,7 @@ public class SectionController {
 
     }
 
-    @PatchMapping("/section/{sectionId}")
+    @PatchMapping("/{sectionId}")
     public ResponseEntity<CommonResponse<SectionResponseDto>> updateSection(
             @PathVariable Long sectionId,
             @RequestBody SectionRequestDto requestDto
@@ -79,12 +67,12 @@ public class SectionController {
 
     }
 
-    @PostMapping("/section")
+    @PostMapping("/update-section")
     public ResponseEntity<CommonResponse<List<SectionResponseDto>>> updatePos(
             @RequestParam Long selectedSectionId,
             @RequestParam Long changeSectionId
     ) {
-        List<SectionResponseDto> response = sectionServiceImpl.updatePos(selectedSectionId, changeSectionId);
+        List<SectionResponseDto> response = sectionServiceImpl.updateNextpos(selectedSectionId, changeSectionId);
         return ResponseEntity.status(HttpStatus.OK.value())
                 .body(CommonResponse.<List<SectionResponseDto>>builder()
                         .msg("섹션 위치가 변경었습니다.")
