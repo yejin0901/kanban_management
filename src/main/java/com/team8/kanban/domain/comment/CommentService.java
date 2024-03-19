@@ -10,4 +10,5 @@ public interface CommentService {
     CommentResponse create(User user, CommentRequest commentRequest, Long CardId);
     CommentResponse update(User user, Long id,CommentRequest updateCommentRequest, Long CardId);
     CommentResponse delete(User user,Long id, Long CardId);
+    CommentResponse getComment(Long id);
 }

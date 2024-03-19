@@ -81,7 +81,7 @@ public class CardController {
     }
 
     //position 변경
-    @PostMapping("/change-position")
+    @PostMapping("/position")
     public ResponseEntity<CommonResponse<List<CardResponse>>> changePosition(
             @Valid @RequestBody PositionChangeRequest request) {
         return ResponseEntity.status(HttpStatus.OK.value())
@@ -92,7 +92,7 @@ public class CardController {
     }
 
     //SectionId 변경
-    @PostMapping("/change-section")
+    @PostMapping("/section")
     public ResponseEntity<CommonResponse<List<CardResponse>>> changeSection(
             @Valid @RequestBody SectionChangeRequest request) {
         return ResponseEntity.status(HttpStatus.OK.value())

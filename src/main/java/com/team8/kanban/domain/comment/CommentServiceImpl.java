@@ -41,4 +41,13 @@ public class CommentServiceImpl implements CommentService{
         commentRepository.delete(findComment);
         return new CommentResponse(findComment,user);
     }
+
+
+    @Transactional(readOnly = true)
+    public CommentResponse getComment(Long id){
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                () -> new NullPointerException("존재하지 않습니다.")
+        );
+        return new CommentResponse(comment,comment.getUser());
+    }
 }

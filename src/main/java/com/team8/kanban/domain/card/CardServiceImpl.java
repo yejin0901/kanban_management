@@ -19,11 +19,13 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<CardResponse> getCards(Long sectionId) {
         return cardRepository.findCards(sectionId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CardResponse getCard(Long cardId) {
         return cardRepository.findCard(cardId);
     }
@@ -60,6 +62,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    @Transactional
     public List<CardResponse> changePosition(Long sectionId, String cardIdSet) {
         long[] idByCard = Arrays.stream(cardIdSet.split("_"))
                 .mapToLong(Long::parseLong)
@@ -81,9 +84,12 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    @Transactional
     public List<CardResponse> changeSection(Long cardId, Long newSectionId, String newSectionIdSet, Long cardPosition) {
         Card sectionUpdateCard = findCard(cardId);
         sectionUpdateCard.setSection(newSectionId);
+        cardRepository.save(sectionUpdateCard);
+
         //cardId 10, cardPositionId 2 ,newSectionIdSet 9_8_7_6_5_4 -> 9_8_10_7_6_5_4
         long[] idByCard = Arrays.stream(newSectionIdSet.split("_"))
                 .mapToLong(Long::parseLong)
@@ -102,18 +108,16 @@ public class CardServiceImpl implements CardService {
 
         List<Card> positionUpdateByCards = cardRepository.findCardsBySectionId(newSectionId);
 
-        for (int i = 0; i < idByCard.length; i++) {
+        for (int i = 0; i < idByCardAddPositionId.length; i++) {
             //positionUpdateByCard: 1 2 3 14 13 12
             for (int j = 0; j < positionUpdateByCards.size(); j++) {
-                if (idByCard[i] == positionUpdateByCards.get(j).getCardId()) {
+                if (idByCardAddPositionId[i] == positionUpdateByCards.get(j).getCardId()) {
                     positionUpdateByCards.get(j).setPosition(i);
                     continue;
                 }
             }
         }
         cardRepository.saveAll(positionUpdateByCards);
-
-
         return cardRepository.findCards(newSectionId);
     }
 
