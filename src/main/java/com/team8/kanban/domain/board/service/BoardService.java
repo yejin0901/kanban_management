@@ -1,5 +1,6 @@
 package com.team8.kanban.domain.board.service;
 
+import com.team8.kanban.domain.board.dto.BoardInviteRequestDto;
 import com.team8.kanban.domain.board.dto.BoardRequestDto;
 import com.team8.kanban.domain.board.dto.BoardResponseDto;
 import com.team8.kanban.domain.board.entity.Board;
@@ -7,13 +8,13 @@ import com.team8.kanban.domain.board.entity.BoardUser;
 import com.team8.kanban.domain.board.repository.BoardRepository;
 import com.team8.kanban.domain.board.repository.BoardUserRepository;
 import com.team8.kanban.domain.user.User;
+import com.team8.kanban.domain.user.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final BoardUserRepository boardUserRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public BoardResponseDto createBoard(User user, BoardRequestDto boardRequestDto) {
@@ -57,9 +59,25 @@ public class BoardService {
         boardRepository.deleteById(boardId);
     }
 
+    @Transactional
+    public void inviteBoard(User user, Long boardId, BoardInviteRequestDto boardInviteRequestDto) {
+        Board board = findBoard(boardId);
+        validateUser(user, board);
+        List<Long> invitedUserIds = boardInviteRequestDto.getInvitedUserIds();
+        for (Long invitedUserId : invitedUserIds) {
+            User invitedUser = userRepository.findById(invitedUserId).orElseThrow(
+                () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
+            if (boardUserRepository.existsByBoardAndUser(board, invitedUser)) {
+                throw new IllegalArgumentException("이미 초대된 유저입니다.");
+            }
+            BoardUser boardUser = new BoardUser(board, invitedUser);
+            boardUserRepository.save(boardUser);
+        }
+    }
+
     private Board findBoard(Long boardId) {
         return boardRepository.findById(boardId).orElseThrow(
-                () -> new IllegalArgumentException("해당 보드는 존재하지 않습니다."));
+            () -> new IllegalArgumentException("해당 보드는 존재하지 않습니다."));
     }
 
     private void existBoard(Long boardId) {
