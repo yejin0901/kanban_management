@@ -1,13 +1,13 @@
 package com.team8.kanban.domain.user;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access=AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Table(name = "users")
 public class User {
 
