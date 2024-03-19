@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/boards")
 public class SectionController {
 
-    private final SectionService sectionServiceImpl;
+    private final SectionServiceImpl sectionServiceImpl;
 
     @PostMapping("/sections")
     public ResponseEntity<CommonResponse<SectionResponseDto>> createSection(
@@ -38,6 +38,18 @@ public class SectionController {
                         .build());
 
     }
+
+//    @GetMapping("/pos-sections")
+//    public ResponseEntity<CommonResponse<List<SectionResponseDto>>> getPosSection() {
+//        List<SectionResponseDto> response = sectionServiceImpl.sortPos();
+//        return ResponseEntity.status(HttpStatus.OK.value())
+//                .body(CommonResponse.<List<SectionResponseDto>>builder()
+//                        .msg("섹션이 정렬" +
+//                                "조회되었습니다.")
+//                        .data(response)
+//                        .build());
+//
+//    }
 
     @DeleteMapping("/sections/{sectionId}")
     public ResponseEntity<CommonResponse<SectionResponseDto>> deleteSection(
@@ -67,18 +79,17 @@ public class SectionController {
 
     }
 
-//    @PostMapping("/section/{sectionId}")
-//    public ResponseEntity<CommonResponse<List<SectionResponseDto>>> updatePos(
-//            @PathVariable Long sectionId,
-//            @RequestParam Integer pos
-//
-//    ) {
-////        SectionResponseDto response = sectionServiceImpl.updatePos(requestDto, userDetails.getUser());
-////        return ResponseEntity.status(HttpStatus.OK.value())
-////                .body(CommonResponse.<List<SectionResponseDto>>builder()
-////                        .msg("섹션 위치가 변경었습니다.")
-////                        .data(response)
-////                        .build());
-//
-//    }
+    @PostMapping("/section")
+    public ResponseEntity<CommonResponse<List<SectionResponseDto>>> updatePos(
+            @RequestParam Long selectedSectionId,
+            @RequestParam Long changeSectionId
+    ) {
+        List<SectionResponseDto> response = sectionServiceImpl.updatePos(selectedSectionId, changeSectionId);
+        return ResponseEntity.status(HttpStatus.OK.value())
+                .body(CommonResponse.<List<SectionResponseDto>>builder()
+                        .msg("섹션 위치가 변경었습니다.")
+                        .data(response)
+                        .build());
+
+    }
 }

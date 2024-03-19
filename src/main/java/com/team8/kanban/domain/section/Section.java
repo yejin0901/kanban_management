@@ -19,9 +19,6 @@ public class Section extends TimeStamped {
     private String sectionName;
 
     @Column
-    private Long prev;
-
-    @Column
     private Long next;
 
 
@@ -41,8 +38,7 @@ public class Section extends TimeStamped {
     public void updateName(String sectionName) {
         this.sectionName = sectionName;
     }
-    public void updatePos(Long prev, Long next) {
-        this.prev = prev;
+    public void updatePos(Long next) {
         this.next = next;
     }
 }

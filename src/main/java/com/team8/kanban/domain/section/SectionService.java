@@ -13,7 +13,5 @@ public interface SectionService {
 
     SectionResponseDto updateSection(Long sectionId, SectionRequestDto requestDto);
 
-    List<SectionResponseDto> updatePos(Long sectionId, Integer pos);
-
     List<SectionResponseDto> getAllSection();
 }

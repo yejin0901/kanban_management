@@ -6,13 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.LongToIntFunction;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class SectionServiceImpl implements SectionService {
 
     private final SectionRepository sectionRepository;
@@ -39,26 +38,46 @@ public class SectionServiceImpl implements SectionService {
         return new SectionResponseDto(section);
     }
 
-    public List<SectionResponseDto> sortPos(Long sectionId, Integer pos) {
-        long start = 0;
-        Optional<Section> section = sectionRepository.findByPrev(null);
-        if(section.isPresent()){
-            start = section.get().getId();
+    public List<SectionResponseDto> sortPos() {
+        long start = sectionRepository.findHeadEntities().getId(); //head
+        Section current = findById(start);//head cur
+        List<Section> orderedList = new ArrayList<>();
 
+        while (current != null) {
+            orderedList.add(current);
+            Long nextSection = current.getNext(); // getNext()는 다음 section 값을 반환하는 메소드
+            if (nextSection == null) {
+                break;
+            }
+            current = findById(nextSection);
         }
-
+        return orderedList.stream().map(SectionResponseDto::new).toList();
     }
 
-    // 1 2 3 4 5 -> 1 2 5 3 4
-    public List<SectionResponseDto> updatePos(Long sectionId, Integer pos) {
-        Section originSection = findById(sectionId);
-        Section changeSection = findByPos(pos);
+    // 2 3 4 5 6 -> 2 4 3 5 6
+    @Transactional
+    public List<SectionResponseDto> updatePos(Long selectedSectionId, Long changePos) {
+        Section selectedSection = findById(selectedSectionId); //4
+        Section changePosSection = findById(changePos);//3
 
-        Long prev = changeSection.getPrev();
-        Long next = changeSection.getNext();
+        Section selectedPrevSection = findByNext(selectedSectionId);
+        System.out.println(selectedPrevSection.getId());
+        Section changePrevSection = findByNext(changePos);
+        System.out.println(changePrevSection.getId());
 
-        sectionRepository.save(originSection.)
+        selectedPrevSection.updatePos(changePos);
+        changePrevSection.updatePos(selectedSectionId);
 
+        Long selectedSectionNext = selectedSection.getNext();
+        Long changePosSectionNext = changePosSection.getNext();
+
+        //update
+        selectedSection.updatePos(changePosSectionNext);
+        changePosSection.updatePos(selectedSectionNext);
+
+
+        return sectionRepository.findAll().stream().map(SectionResponseDto::new).toList();
+//        return sortPos();
     }
 
     @Override
@@ -70,8 +89,9 @@ public class SectionServiceImpl implements SectionService {
         return sectionRepository.findById(id).orElseThrow(() -> new NotFoundException(SectionErrorCode.SECTION_NOT_FOUND));
     }
 
-    private Section findByPos(Integer pos) {
-        return sectionRepository.findByPrev(pos).orElseThrow(() -> new NotFoundException(SectionErrorCode.SECTION_NOT_FOUND));
+    private Section findByNext(Long pos) {
+        System.out.println("없음");
+        return sectionRepository.findByNext(pos).orElseThrow(() -> new NotFoundException(SectionErrorCode.SECTION_NOT_FOUND));
     }
 
 }

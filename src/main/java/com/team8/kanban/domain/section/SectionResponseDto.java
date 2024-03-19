@@ -7,9 +7,11 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class SectionResponseDto {
-    private final String sectionName;
+    private Long sectionId;
+    private String sectionName;
 
     public SectionResponseDto(Section section) {
+        sectionId = section.getId();
         sectionName = section.getSectionName();
     }
 }
