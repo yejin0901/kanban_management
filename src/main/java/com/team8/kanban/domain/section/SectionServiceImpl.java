@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -100,6 +99,7 @@ public class SectionServiceImpl implements SectionService {
     public List<SectionResponseDto> getAllSection() {
         return sectionRepository.findAll().stream().map(SectionResponseDto::new).toList();
     }
+
 
     private Section findById(Long id) {
         return sectionRepository.findById(id).orElseThrow(() -> new NotFoundException(SectionErrorCode.SECTION_NOT_FOUND));
