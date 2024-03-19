@@ -24,7 +24,7 @@ public class BoardController {
             @RequestBody BoardRequestDto boardRequestDto) {
         BoardResponseDto boardResponseDto = boardService.createBoard(userDetails.getUser(), boardRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED.value())
-                .body(CommonResponse.<BoardResponseDto>builder().data(boardResponseDto).build());
+                .body(CommonResponse.<BoardResponseDto>builder().data(boardResponseDto).msg("보드 생성 완료").build());
     }
 
     @GetMapping("/boards")
@@ -32,7 +32,7 @@ public class BoardController {
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<BoardResponseDto> boardResponseDtos = boardService.getBoard(userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK.value())
-                .body(CommonResponse.<List<BoardResponseDto>>builder().data(boardResponseDtos).build());
+                .body(CommonResponse.<List<BoardResponseDto>>builder().data(boardResponseDtos).msg("보드 조회 완료").build());
     }
 
     @PutMapping("/boards/{boardId}")
@@ -42,7 +42,7 @@ public class BoardController {
             @PathVariable Long boardId) {
         BoardResponseDto boardResponseDto = boardService.updateBoard(userDetails.getUser(), boardRequestDto, boardId);
         return ResponseEntity.status(HttpStatus.OK.value())
-                .body(CommonResponse.<BoardResponseDto>builder().data(boardResponseDto).build());
+                .body(CommonResponse.<BoardResponseDto>builder().data(boardResponseDto).msg("보드 수정 완료").build());
     }
 
     @DeleteMapping("/boards/{boardId}")
@@ -51,7 +51,6 @@ public class BoardController {
             @PathVariable Long boardId) {
         boardService.deleteBoard(userDetails.getUser(), boardId);
         return ResponseEntity.status(HttpStatus.OK.value())
-                .body(CommonResponse.<Void>builder().msg("보드가 삭제되었습니다.").build());
+                .body(CommonResponse.<Void>builder().msg("보드 삭제 완료").build());
     }
-
 }
