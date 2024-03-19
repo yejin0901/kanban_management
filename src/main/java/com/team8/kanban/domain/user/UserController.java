@@ -4,7 +4,7 @@ import com.team8.kanban.domain.user.dto.DeleteRequest;
 import com.team8.kanban.domain.user.dto.PasswordRequest;
 import com.team8.kanban.domain.user.dto.UserRequest;
 import com.team8.kanban.domain.user.dto.UserResponse;
-import com.team8.kanban.global.exception.CommonResponse;
+import com.team8.kanban.global.common.CommonResponse;
 import com.team8.kanban.global.jwt.JwtUtil;
 import com.team8.kanban.global.security.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,10 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

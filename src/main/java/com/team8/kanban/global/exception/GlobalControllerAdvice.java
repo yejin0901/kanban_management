@@ -1,5 +1,6 @@
 package com.team8.kanban.global.exception;
 
+import com.team8.kanban.global.common.CommonResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
@@ -40,7 +41,7 @@ public class GlobalControllerAdvice {
     }
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<CommonResponse<ExceptionResponse>> IllegalArgumentException(IllegalArgumentException ex) {
-        log.error(">>>IllegalArgumentException<<<");
+        log.info(">>>IllegalArgumentException<<<");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(CommonResponse.<ExceptionResponse>builder()
                         .msg(ex.getMessage())
@@ -50,7 +51,7 @@ public class GlobalControllerAdvice {
     }
     @ExceptionHandler({NullPointerException.class})
     public ResponseEntity<CommonResponse<ExceptionResponse>> NullPointerException(NullPointerException ex) {
-        log.error(">>>NullPointerException<<<");
+        log.info(">>>NullPointerException<<<");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(CommonResponse.<ExceptionResponse>builder()
                         .msg(ex.getMessage())
@@ -60,7 +61,7 @@ public class GlobalControllerAdvice {
     }
     @ExceptionHandler({DuplicateKeyException.class})
     public ResponseEntity<CommonResponse<ExceptionResponse>> DuplicateKeyException(DuplicateKeyException ex) {
-        log.error(">>>DuplicateKeyException<<<");
+        log.info(">>>DuplicateKeyException<<<");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(CommonResponse.<ExceptionResponse>builder()
                         .msg(ex.getMessage())
@@ -74,5 +75,10 @@ public class GlobalControllerAdvice {
                 .statusCode(status.value())
                 .state(status)
                 .build();
+    }
+
+    @ExceptionHandler({NotFoundException.class})
+    public CommonResponse<String> handleNotFound(NotFoundException ex) {
+        return CommonResponse.fromErrorCode(ex.getErrorCode());
     }
 }
