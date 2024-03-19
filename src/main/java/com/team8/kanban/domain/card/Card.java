@@ -45,4 +45,8 @@ public class Card extends TimeStamped {
         this.expiredDate = request.getExpiredDate();
         this.colorEnum = ColorEnum.valueOf(request.getColor());
     }
+
+    public void setPosition(long position) {
+        this.position = position;
+    }
 }

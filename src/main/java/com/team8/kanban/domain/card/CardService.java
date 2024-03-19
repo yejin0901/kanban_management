@@ -53,5 +53,15 @@ public interface CardService {
      * @return 성공시 true
      */
     Boolean deleteCard(User user, Long cardId);
+
+    /**
+     * 카드 position 변경
+     *
+     * @param sectionId position을 변경할 sectionId
+     * @param cardIdSet id가 입력된 순서대로 position을 순차입력
+     * @return 해당
+     */
+    List<CardResponse> changePosition(Long sectionId, String cardIdSet);
+
 }
 

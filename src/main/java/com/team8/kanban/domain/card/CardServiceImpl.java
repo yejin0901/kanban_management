@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -58,6 +59,27 @@ public class CardServiceImpl implements CardService {
         return true;
     }
 
+    @Override
+    public List<CardResponse> changePosition(Long sectionId, String cardIdSet) {
+        long[] idByCard = Arrays.stream(cardIdSet.split("_"))
+                .mapToLong(Long::parseLong)
+                .toArray();
+        List<Card> positionUpdateByCards = cardRepository.findCardsBySectionId(sectionId);
+
+        //idByCard: 13 3 2 1 14 12
+        for (int i = 0; i < idByCard.length; i++) {
+            //positionUpdateByCard: 1 2 3 14 13 12
+            for (int j = 0; j < positionUpdateByCards.size(); j++) {
+                if (idByCard[i] == positionUpdateByCards.get(j).getCardId()) {
+                    positionUpdateByCards.get(j).setPosition(i);
+                    continue;
+                }
+            }
+        }
+        cardRepository.saveAll(positionUpdateByCards);
+        return cardRepository.findCards(sectionId);
+    }
+
 
     private Card findCard(Long cardId) {
         return cardRepository.findById(cardId).orElseThrow(
@@ -79,6 +101,8 @@ public class CardServiceImpl implements CardService {
                 .expiredDate(card.getExpiredDate())
                 .createdAt(card.getCreatedAt())
                 .modifiedAt(card.getModifiedAt())
+                .sectionId(card.getSectionId())
+                .position(card.getPosition())
                 .build();
     }
 

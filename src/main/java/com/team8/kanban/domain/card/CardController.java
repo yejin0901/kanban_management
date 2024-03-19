@@ -1,9 +1,6 @@
 package com.team8.kanban.domain.card;
 
-import com.team8.kanban.domain.card.dto.CardResponse;
-import com.team8.kanban.domain.card.dto.CreateCardRequest;
-import com.team8.kanban.domain.card.dto.SectionIdCardRequest;
-import com.team8.kanban.domain.card.dto.UpdateCardRequest;
+import com.team8.kanban.domain.card.dto.*;
 import com.team8.kanban.global.exception.CommonResponse;
 import com.team8.kanban.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
@@ -79,6 +76,17 @@ public class CardController {
                 body(CommonResponse.<Boolean>builder()
                         .msg("Card 삭제 성공")
                         .data(cardService.deleteCard(userDetails.getUser(), cardId))
+                        .build());
+    }
+
+    @PostMapping("/change-position")
+    public ResponseEntity<CommonResponse<List<CardResponse>>> changePosition(
+            @Valid @RequestBody PositionChangeRequest request
+    ) {
+        return ResponseEntity.status(HttpStatus.OK.value())
+                .body(CommonResponse.<List<CardResponse>>builder()
+                        .msg("position이 변경되었습니다.")
+                        .data(cardService.changePosition(request.getSectionId(), request.getPositionSet()))
                         .build());
     }
 }

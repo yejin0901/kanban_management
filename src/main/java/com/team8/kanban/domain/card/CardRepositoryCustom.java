@@ -21,4 +21,12 @@ public interface CardRepositoryCustom {
      * @return List<CardResponse>
      */
     List<CardResponse> findCards(Long sectionId);
+
+    /**
+     * sectionId에 해당하는 section의 전체 카드 조회
+     *
+     * @param sectionId position 변경해야할 section의 Id
+     * @return List<Card>
+     */
+    List<Card> findCardsBySectionId(Long sectionId);
 }

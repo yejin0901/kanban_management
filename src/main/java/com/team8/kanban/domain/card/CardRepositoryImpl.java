@@ -55,7 +55,17 @@ public class CardRepositoryImpl implements CardRepositoryCustom {
                         qCard.position))
                 .from(qCard)
                 .leftJoin(qUser).on(qCard.userid.eq(qUser.id))
-                .orderBy(qCard.position.asc().nullsLast(),qCard.cardId.desc())
+                .orderBy(qCard.position.asc().nullsLast(), qCard.cardId.desc())
+                .where(qCard.sectionId.eq(sectionId))
+                .fetch();
+    }
+
+    @Override
+    public List<Card> findCardsBySectionId(Long sectionId) {
+        return jpaConfig.jpaQueryFactory()
+                .selectFrom(qCard)
+                .leftJoin(qUser).on(qCard.userid.eq(qUser.id))
+                .orderBy(qCard.cardId.asc())
                 .where(qCard.sectionId.eq(sectionId))
                 .fetch();
     }
