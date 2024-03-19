@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -81,6 +80,24 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public List<SectionResponseDto> getAllSection() {
         return sectionRepository.findAll().stream().map(SectionResponseDto::new).toList();
+    }
+
+    @Override
+    public List<SectionResponseDto> updateNextpos(Long selectedSectionId, Long changeSectionId) {
+        Section selectedSection = findById(selectedSectionId); //4
+        Section changePosSection = findById(changeSectionId);//3
+        Section selectedPrevSection = findByNext(selectedSectionId);
+        System.out.println(selectedPrevSection.getId());
+        Section changePrevSection = findByNext(changeSectionId);
+        System.out.println(changePrevSection.getId());
+        selectedPrevSection.updatePos(changeSectionId);
+        changePrevSection.updatePos(selectedSectionId);
+        Long selectedSectionNext = selectedSection.getNext();
+        Long changePosSectionNext = changePosSection.getNext();
+        //update
+        selectedSection.updatePos(changePosSectionNext);
+        changePosSection.updatePos(selectedSectionNext);
+        return sortPos();
     }
 
     private Section findById(Long id) {
