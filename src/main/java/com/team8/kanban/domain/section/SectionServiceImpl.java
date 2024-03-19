@@ -75,8 +75,6 @@ public class SectionServiceImpl implements SectionService {
         selectedSection.updatePos(changePosSectionNext);
         changePosSection.updatePos(selectedSectionNext);
 
-
-        return sectionRepository.findAll().stream().map(SectionResponseDto::new).toList();
        return sortPos();
     }
 
