@@ -1,7 +1,7 @@
 package com.team8.kanban.domain.card;
 
 import com.team8.kanban.domain.card.dto.*;
-import com.team8.kanban.global.exception.CommonResponse;
+import com.team8.kanban.global.common.CommonResponse;
 import com.team8.kanban.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
