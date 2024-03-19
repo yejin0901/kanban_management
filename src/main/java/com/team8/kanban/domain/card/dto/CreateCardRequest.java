@@ -17,4 +17,6 @@ public class CreateCardRequest {
     private LocalDateTime expiredDate;
     @NotEmpty
     private String color;
+    @NotEmpty
+    private Long sectionId;
 }

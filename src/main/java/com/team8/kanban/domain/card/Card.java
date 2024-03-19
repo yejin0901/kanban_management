@@ -35,6 +35,10 @@ public class Card extends TimeStamped {
 
     private ColorEnum colorEnum;
 
+    private Long sectionId;
+
+    private Long position;
+
     public void update(UpdateCardRequest request) {
         this.cardName = request.getCardName();
         this.description = request.getDescription();
