@@ -15,7 +15,7 @@ public class SectionController {
 
     private final SectionService sectionServiceImpl;
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<CommonResponse<SectionResponseDto>> createSection(
             @RequestBody SectionRequestDto requestDto
     ) {
@@ -28,7 +28,7 @@ public class SectionController {
 
     }
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<CommonResponse<List<SectionResponseDto>>> getAllSection() {
         List<SectionResponseDto> response = sectionServiceImpl.getAllSection();
         return ResponseEntity.status(HttpStatus.OK.value())
@@ -67,7 +67,7 @@ public class SectionController {
 
     }
 
-    @PostMapping("/update-section")
+    @PostMapping("/position")
     public ResponseEntity<CommonResponse<List<SectionResponseDto>>> updatePos(
             @RequestParam Long selectedSectionId,
             @RequestParam Long changeSectionId
