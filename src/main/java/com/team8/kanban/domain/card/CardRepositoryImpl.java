@@ -41,7 +41,7 @@ public class CardRepositoryImpl implements CardRepositoryCustom {
     }
 
     @Override
-    public List<CardResponse> findCards() {
+    public List<CardResponse> findCards(Long sectionId) {
         return jpaConfig.jpaQueryFactory()
                 .select(Projections.fields(CardResponse.class,
                         qCard.cardId,
@@ -50,9 +50,13 @@ public class CardRepositoryImpl implements CardRepositoryCustom {
                         qUser.username,
                         qCard.expiredDate,
                         qCard.createdAt,
-                        qCard.modifiedAt))
+                        qCard.modifiedAt,
+                        qCard.sectionId,
+                        qCard.position))
                 .from(qCard)
                 .leftJoin(qUser).on(qCard.userid.eq(qUser.id))
+                .orderBy(qCard.position.asc().nullsLast(),qCard.cardId.desc())
+                .where(qCard.sectionId.eq(sectionId))
                 .fetch();
     }
 }

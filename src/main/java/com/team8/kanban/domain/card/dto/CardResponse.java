@@ -21,5 +21,7 @@ public class CardResponse {
     private LocalDateTime expiredDate;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private Long sectionId;
+    private Long position;
 
 }

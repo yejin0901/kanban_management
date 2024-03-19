@@ -15,9 +15,10 @@ public interface CardRepositoryCustom {
     CardResponse findCard(Long cardId);
 
     /**
-     * 전체 카드 조회
+     * sectionId에 해당하는 section의 전체 카드 조회
      *
+     * @param sectionId 조회할 section의 Id값
      * @return List<CardResponse>
      */
-    List<CardResponse> findCards();
+    List<CardResponse> findCards(Long sectionId);
 }

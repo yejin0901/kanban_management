@@ -10,11 +10,12 @@ import java.util.List;
 public interface CardService {
 
     /**
-     * 전체 카드 조회
+     * sectionId에 해당하는 section의 전체 카드 조회
      *
-     * @return 전체 Card Entity
+     * @param sectionId 조회할 section의 Id값
+     * @return 해당 section의 Card Entity
      */
-    List<CardResponse> getCards();
+    List<CardResponse> getCards(Long sectionId);
 
     /**
      * 단일 카드 조회

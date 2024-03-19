@@ -18,8 +18,8 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
 
     @Override
-    public List<CardResponse> getCards() {
-        return cardRepository.findCards();
+    public List<CardResponse> getCards(Long sectionId) {
+        return cardRepository.findCards(sectionId);
     }
 
     @Override
@@ -90,6 +90,7 @@ public class CardServiceImpl implements CardService {
                 .username(user.getUsername())
                 .expiredDate(request.getExpiredDate())
                 .colorEnum(ColorEnum.valueOf(request.getColor()))
+                .sectionId(request.getSectionId())
                 .build();
     }
 }

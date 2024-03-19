@@ -2,6 +2,7 @@ package com.team8.kanban.domain.card;
 
 import com.team8.kanban.domain.card.dto.CardResponse;
 import com.team8.kanban.domain.card.dto.CreateCardRequest;
+import com.team8.kanban.domain.card.dto.SectionIdCardRequest;
 import com.team8.kanban.domain.card.dto.UpdateCardRequest;
 import com.team8.kanban.global.exception.CommonResponse;
 import com.team8.kanban.global.security.UserDetailsImpl;
@@ -20,13 +21,14 @@ import java.util.List;
 public class CardController {
 
     private final CardService cardService;
+
     //카드 조회
     @GetMapping
-    public ResponseEntity<CommonResponse<List<CardResponse>>> getCards() {
+    public ResponseEntity<CommonResponse<List<CardResponse>>> getCards(@RequestBody SectionIdCardRequest request) {
         return ResponseEntity.status(HttpStatus.OK.value())
                 .body(CommonResponse.<List<CardResponse>>builder()
                         .msg("조회 되었습니다.")
-                        .data(cardService.getCards())
+                        .data(cardService.getCards(request.getSectionId()))
                         .build());
     }
 
