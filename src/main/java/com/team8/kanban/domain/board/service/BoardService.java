@@ -59,8 +59,9 @@ public class BoardService {
 
     @Transactional
     public void deleteBoard(User user, Long boardId) {
-        existBoard(boardId);
-        validateCreatedUser(user, boardId);
+        Board board = findBoard(boardId);
+        validateCreatedUser(user, board);
+        boardUserRepository.deleteAllByBoard(board);
         boardRepository.deleteById(boardId);
     }
 
@@ -98,21 +99,14 @@ public class BoardService {
             () -> new IllegalArgumentException("해당 보드는 존재하지 않습니다."));
     }
 
-    private void existBoard(Long boardId) {
-        boolean flag = boardRepository.existsById(boardId);
-        if (!flag) {
-            throw new IllegalArgumentException("해당 보드는 존재하지 않습니다.");
-        }
-    }
-
     private void validateUser(User user, Board board) {
         if (!boardUserRepository.existsByBoardAndUser(board, user)) {
             throw new IllegalArgumentException("접근 권한이 없습니다.");
         }
     }
 
-    private void validateCreatedUser(User user, Long boardId) {
-        if (!boardId.equals(user.getId())) {
+    private void validateCreatedUser(User user, Board board) {
+        if (!board.getCreatedUserId().equals(user.getId())) {
             throw new IllegalArgumentException("보드를 생성한 유저가 아닙니다.");
         }
     }
