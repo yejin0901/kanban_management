@@ -3,6 +3,7 @@ package com.team8.kanban.domain.board.service;
 import com.team8.kanban.domain.board.dto.BoardInviteRequestDto;
 import com.team8.kanban.domain.board.dto.BoardRequestDto;
 import com.team8.kanban.domain.board.dto.BoardResponseDto;
+import com.team8.kanban.domain.board.dto.BoardUserResponseDto;
 import com.team8.kanban.domain.board.entity.Board;
 import com.team8.kanban.domain.board.entity.BoardUser;
 import com.team8.kanban.domain.board.repository.BoardRepository;
@@ -32,15 +33,18 @@ public class BoardService {
         boardRepository.save(board);
         BoardUser boardUser = new BoardUser(board, user);
         boardUserRepository.save(boardUser);
+
         return new BoardResponseDto(board);
     }
 
     public List<BoardResponseDto> getBoard(User user) {
         List<BoardUser> boardUsers = boardUserRepository.findAllByUserId(user.getId());
         List<Board> boards = new ArrayList<>();
+
         for (BoardUser boardUser : boardUsers) {
             boards.add(boardUser.getBoard());
         }
+
         return boards.stream().map(BoardResponseDto::new).toList();
     }
 
@@ -49,6 +53,7 @@ public class BoardService {
         Board board = findBoard(boardId);
         validateUser(user, board);
         board.update(boardRequestDto);
+
         return new BoardResponseDto(board);
     }
 
@@ -60,10 +65,12 @@ public class BoardService {
     }
 
     @Transactional
-    public void inviteBoard(User user, Long boardId, BoardInviteRequestDto boardInviteRequestDto) {
+    public List<BoardUserResponseDto> inviteBoard(User user, Long boardId,
+        BoardInviteRequestDto boardInviteRequestDto) {
         Board board = findBoard(boardId);
         validateUser(user, board);
         List<Long> invitedUserIds = boardInviteRequestDto.getInvitedUserIds();
+
         for (Long invitedUserId : invitedUserIds) {
             User invitedUser = userRepository.findById(invitedUserId).orElseThrow(
                 () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
@@ -73,6 +80,17 @@ public class BoardService {
             BoardUser boardUser = new BoardUser(board, invitedUser);
             boardUserRepository.save(boardUser);
         }
+
+        List<BoardUser> boardUsers = boardUserRepository.findAllByBoard(board);
+        return boardUsers.stream().map(BoardUserResponseDto::new).toList();
+    }
+
+    public List<BoardUserResponseDto> getBoardUsers(User user, Long boardId) {
+        Board board = findBoard(boardId);
+        validateUser(user, board);
+        List<BoardUser> boardUsers = boardUserRepository.findAllByBoard(board);
+
+        return boardUsers.stream().map(BoardUserResponseDto::new).toList();
     }
 
     private Board findBoard(Long boardId) {

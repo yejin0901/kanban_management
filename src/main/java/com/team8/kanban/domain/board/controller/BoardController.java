@@ -3,6 +3,7 @@ package com.team8.kanban.domain.board.controller;
 import com.team8.kanban.domain.board.dto.BoardInviteRequestDto;
 import com.team8.kanban.domain.board.dto.BoardRequestDto;
 import com.team8.kanban.domain.board.dto.BoardResponseDto;
+import com.team8.kanban.domain.board.dto.BoardUserResponseDto;
 import com.team8.kanban.domain.board.service.BoardService;
 import com.team8.kanban.global.exception.CommonResponse;
 import com.team8.kanban.global.security.UserDetailsImpl;
@@ -67,12 +68,25 @@ public class BoardController {
     }
 
     @PostMapping("/boards/{boardId}")
-    public ResponseEntity<CommonResponse<Void>> inviteBoard(
+    public ResponseEntity<CommonResponse<List<BoardUserResponseDto>>> inviteBoard(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long boardId,
         @RequestBody BoardInviteRequestDto boardInviteRequestDto) {
-        boardService.inviteBoard(userDetails.getUser(), boardId, boardInviteRequestDto);
+        List<BoardUserResponseDto> boardUserResponseDtos = boardService.inviteBoard(
+            userDetails.getUser(), boardId, boardInviteRequestDto);
         return ResponseEntity.status(HttpStatus.OK.value())
-            .body(CommonResponse.<Void>builder().msg("보드 초대 완료").build());
+            .body(CommonResponse.<List<BoardUserResponseDto>>builder().data(boardUserResponseDtos)
+                .msg("보드 초대 완료").build());
+    }
+
+    @GetMapping("/boards/{boardId}")
+    public ResponseEntity<CommonResponse<List<BoardUserResponseDto>>> getBoardUsers(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable Long boardId) {
+        List<BoardUserResponseDto> boardUserResponseDtos = boardService.getBoardUsers(
+            userDetails.getUser(), boardId);
+        return ResponseEntity.status(HttpStatus.OK.value())
+            .body(CommonResponse.<List<BoardUserResponseDto>>builder().data(boardUserResponseDtos)
+                .msg("보드 유저 조회 완료").build());
     }
 }
