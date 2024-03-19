@@ -2,7 +2,7 @@ package com.team8.kanban.global.security;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.team8.kanban.global.exception.CommonResponse;
+import com.team8.kanban.global.common.CommonResponse;
 import com.team8.kanban.global.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;

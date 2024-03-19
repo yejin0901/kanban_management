@@ -2,8 +2,7 @@ package com.team8.kanban.domain.comment;
 
 import com.team8.kanban.domain.comment.dto.CommentRequest;
 import com.team8.kanban.domain.comment.dto.CommentResponse;
-import com.team8.kanban.domain.user.dto.UserResponse;
-import com.team8.kanban.global.exception.CommonResponse;
+import com.team8.kanban.global.common.CommonResponse;
 import com.team8.kanban.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
