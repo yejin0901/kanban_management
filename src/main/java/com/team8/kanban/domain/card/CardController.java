@@ -24,7 +24,8 @@ public class CardController {
 
     //카드 조회
     @GetMapping
-    public ResponseEntity<CommonResponse<List<CardResponse>>> getCards(@RequestBody SectionIdCardRequest request) {
+    public ResponseEntity<CommonResponse<List<CardResponse>>> getCards(
+            @Valid @RequestBody SectionIdCardRequest request) {
         return ResponseEntity.status(HttpStatus.OK.value())
                 .body(CommonResponse.<List<CardResponse>>builder()
                         .msg("조회 되었습니다.")
