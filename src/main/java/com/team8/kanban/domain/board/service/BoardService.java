@@ -4,110 +4,64 @@ import com.team8.kanban.domain.board.dto.BoardInviteRequestDto;
 import com.team8.kanban.domain.board.dto.BoardRequestDto;
 import com.team8.kanban.domain.board.dto.BoardResponseDto;
 import com.team8.kanban.domain.board.dto.BoardUserResponseDto;
-import com.team8.kanban.domain.board.entity.Board;
-import com.team8.kanban.domain.board.entity.BoardUser;
-import com.team8.kanban.domain.board.repository.BoardRepository;
-import com.team8.kanban.domain.board.repository.BoardUserRepository;
 import com.team8.kanban.domain.user.User;
-import com.team8.kanban.domain.user.UserRepository;
-import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@RequiredArgsConstructor
-@Getter
-@Transactional(readOnly = true)
-public class BoardService {
+public interface BoardService {
 
-    private final BoardRepository boardRepository;
-    private final BoardUserRepository boardUserRepository;
-    private final UserRepository userRepository;
+    /**
+     * 보드 생성
+     *
+     * @param user 로그인한 유저 정보
+     * @param boardRequestDto 생성할 보드 정보
+     * @return 생성한 보드
+     */
+    BoardResponseDto createBoard(User user, BoardRequestDto boardRequestDto);
 
-    @Transactional
-    public BoardResponseDto createBoard(User user, BoardRequestDto boardRequestDto) {
-        Board board = new Board(boardRequestDto, user);
-        boardRepository.save(board);
-        BoardUser boardUser = new BoardUser(board, user);
-        boardUserRepository.save(boardUser);
+    /**
+     * 전체 보드 조회
+     *
+     * @param user 로그인한 유저 정보
+     * @return 소유한 보드 리스트
+     */
+    List<BoardResponseDto> getBoard(User user);
 
-        return new BoardResponseDto(board);
-    }
+    /**
+     * 보드 수정
+     *
+     * @param user 로그인한 유저 정보
+     * @param boardRequestDto 수정할 보드 정보
+     * @param boardId 수정할 보드 ID
+     * @return 수정된 보드
+     */
+    BoardResponseDto updateBoard(User user, BoardRequestDto boardRequestDto, Long boardId);
 
-    public List<BoardResponseDto> getBoard(User user) {
-        List<BoardUser> boardUsers = boardUserRepository.findAllByUserId(user.getId());
-        List<Board> boards = new ArrayList<>();
+    /**
+     * 보드 삭제
+     *
+     * @param user 로그인한 유저 정보
+     * @param boardId 삭제할 보드 ID
+     */
+    void deleteBoard(User user, Long boardId);
 
-        for (BoardUser boardUser : boardUsers) {
-            boards.add(boardUser.getBoard());
-        }
+    /**
+     *보드 초대
+     *
+     * @param user 로그인한 유저 정보
+     * @param boardId 초대할 보드 ID
+     * @param boardInviteRequestDto 초대할 유저 ID 리스트
+     * @return 보드 사용 유저 리스트
+     */
+    List<BoardUserResponseDto> inviteBoard(User user, Long boardId,
+        BoardInviteRequestDto boardInviteRequestDto);
 
-        return boards.stream().map(BoardResponseDto::new).toList();
-    }
+    /**
+     *보드 유저 조회
+     *
+     * @param user 로그인한 유저 정보
+     * @param boardId 조회할 보드 ID
+     * @return 보드 사용 유저 리스트
+     */
+    List<BoardUserResponseDto> getBoardUsers(User user, Long boardId);
 
-    @Transactional
-    public BoardResponseDto updateBoard(User user, BoardRequestDto boardRequestDto, Long boardId) {
-        Board board = findBoard(boardId);
-        validateUser(user, board);
-        board.update(boardRequestDto);
-
-        return new BoardResponseDto(board);
-    }
-
-    @Transactional
-    public void deleteBoard(User user, Long boardId) {
-        Board board = findBoard(boardId);
-        validateCreatedUser(user, board);
-        boardUserRepository.deleteAllByBoard(board);
-        boardRepository.deleteById(boardId);
-    }
-
-    @Transactional
-    public List<BoardUserResponseDto> inviteBoard(User user, Long boardId,
-        BoardInviteRequestDto boardInviteRequestDto) {
-        Board board = findBoard(boardId);
-        validateUser(user, board);
-        List<Long> invitedUserIds = boardInviteRequestDto.getInvitedUserIds();
-
-        for (Long invitedUserId : invitedUserIds) {
-            User invitedUser = userRepository.findById(invitedUserId).orElseThrow(
-                () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
-            if (boardUserRepository.existsByBoardAndUser(board, invitedUser)) {
-                throw new IllegalArgumentException("이미 초대된 유저입니다.");
-            }
-            BoardUser boardUser = new BoardUser(board, invitedUser);
-            boardUserRepository.save(boardUser);
-        }
-
-        List<BoardUser> boardUsers = boardUserRepository.findAllByBoard(board);
-        return boardUsers.stream().map(BoardUserResponseDto::new).toList();
-    }
-
-    public List<BoardUserResponseDto> getBoardUsers(User user, Long boardId) {
-        Board board = findBoard(boardId);
-        validateUser(user, board);
-        List<BoardUser> boardUsers = boardUserRepository.findAllByBoard(board);
-
-        return boardUsers.stream().map(BoardUserResponseDto::new).toList();
-    }
-
-    private Board findBoard(Long boardId) {
-        return boardRepository.findById(boardId).orElseThrow(
-            () -> new IllegalArgumentException("해당 보드는 존재하지 않습니다."));
-    }
-
-    private void validateUser(User user, Board board) {
-        if (!boardUserRepository.existsByBoardAndUser(board, user)) {
-            throw new IllegalArgumentException("접근 권한이 없습니다.");
-        }
-    }
-
-    private void validateCreatedUser(User user, Board board) {
-        if (!board.getCreatedUserId().equals(user.getId())) {
-            throw new IllegalArgumentException("보드를 생성한 유저가 아닙니다.");
-        }
-    }
 }
