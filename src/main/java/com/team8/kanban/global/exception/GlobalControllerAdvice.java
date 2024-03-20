@@ -1,8 +1,11 @@
 package com.team8.kanban.global.exception;
 
 import com.team8.kanban.global.common.CommonResponse;
+import com.team8.kanban.global.exception.customException.NotAuthorizedException;
 import com.team8.kanban.global.exception.customException.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -11,9 +14,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestControllerAdvice
 @Slf4j
@@ -72,10 +72,25 @@ public class GlobalControllerAdvice {
     public ResponseEntity handleNotFoundException(NotFoundException ex, HttpServletRequest request) {
         log.error(">>>NotFoundException<<< \n msg: {}, code: {}, url: {}",
                 ex.getErrorCode().getMessage(), ex.getErrorCode().getHttpStatus(), request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(CommonResponse.builder()
-                        .msg(ex.getErrorCode().getMessage())
-                        .data(ex.getErrorCode().getHttpStatus())
-                        .build());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(CommonResponse.builder()
+                .msg(ex.getErrorCode().getMessage())
+                .data(ex.getErrorCode().getHttpStatus())
+                .build());
     }
+
+    @ExceptionHandler(NotAuthorizedException.class)
+    public ResponseEntity handleForbiddenException(NotAuthorizedException ex,
+        HttpServletRequest request) {
+        log.error(">>>ForbiddenException<<< \n msg: {}, code: {}, url: {}",
+            ex.getErrorCode().getMessage(), ex.getErrorCode().getHttpStatus(),
+            request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(CommonResponse.builder()
+                .msg(ex.getErrorCode().getMessage())
+                .data(ex.getErrorCode().getHttpStatus())
+                .build());
+    }
+
+
 }
