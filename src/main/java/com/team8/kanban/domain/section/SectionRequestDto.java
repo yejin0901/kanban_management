@@ -11,4 +11,5 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class SectionRequestDto {
     private String sectionName;
+    private String boardId;
 }
