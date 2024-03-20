@@ -2,14 +2,15 @@ package com.team8.kanban.domain.section;
 
 import com.team8.kanban.domain.board.entity.Board;
 import com.team8.kanban.domain.board.repository.BoardRepository;
-import com.team8.kanban.global.exception.NotFoundException;
-import com.team8.kanban.global.exception.error.SectionErrorCode;
+import com.team8.kanban.global.exception.customException.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.team8.kanban.global.exception.ErrorCode.SECTION_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -121,7 +122,7 @@ public class SectionServiceImpl implements SectionService {
 
 
     private Section findById(Long id) {
-        return sectionRepository.findById(id).orElseThrow(() -> new NotFoundException(SectionErrorCode.SECTION_NOT_FOUND));
+        return sectionRepository.findById(id).orElseThrow(() -> new NotFoundException(SECTION_NOT_FOUND));
     }
 
     private Section findByNext(Long pos) {
