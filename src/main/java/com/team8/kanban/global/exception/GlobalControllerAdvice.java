@@ -50,7 +50,7 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity handleNullPointerException(NullPointerException ex, HttpServletRequest request) {
         log.error(">>>NullPointerException<<< \n msg: {}, url: {}",
-                ex.getMessage(), request.getRequestURI());
+                ex.getMessage(), request.getRequestURI(), ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(CommonResponse.builder()
                         .msg(ex.getMessage())
@@ -60,7 +60,7 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(DuplicateKeyException.class)
     public ResponseEntity handleDuplicateKeyException(DuplicateKeyException ex, HttpServletRequest request) {
         log.error(">>>DuplicateKeyException<<< \n msg: {}, url: {}",
-                ex.getMessage(), request.getRequestURI());
+                ex.getMessage(), request.getRequestURI(), ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(CommonResponse.builder()
                         .msg(ex.getMessage())
