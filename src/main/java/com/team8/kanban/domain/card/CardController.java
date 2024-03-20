@@ -58,7 +58,7 @@ public class CardController {
     @PatchMapping("/{cardId}")
     public ResponseEntity<CommonResponse<CardResponse>> updateCard(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestBody UpdateCardRequest request,
+            @RequestBody UpdateCardRequest request,
             @PathVariable Long cardId) {
         return ResponseEntity.status(HttpStatus.OK.value())
                 .body(CommonResponse.<CardResponse>builder()
