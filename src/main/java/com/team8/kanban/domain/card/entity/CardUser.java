@@ -2,13 +2,17 @@ package com.team8.kanban.domain.card.entity;
 
 import com.team8.kanban.domain.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@Builder
 @Table(name = "card_user")
 @NoArgsConstructor
+@AllArgsConstructor
 public class CardUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
