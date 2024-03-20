@@ -69,9 +69,9 @@ public class CardServiceImpl implements CardService {
                 .toArray();
         List<Card> positionUpdateByCards = cardRepository.findCardsBySectionId(sectionId);
 
-        //idByCard: 13 3 2 1 14 12
+
         for (int i = 0; i < idByCard.length; i++) {
-            //positionUpdateByCard: 1 2 3 14 13 12
+
             for (int j = 0; j < positionUpdateByCards.size(); j++) {
                 if (idByCard[i] == positionUpdateByCards.get(j).getCardId()) {
                     positionUpdateByCards.get(j).setPosition(i);
@@ -94,8 +94,6 @@ public class CardServiceImpl implements CardService {
         long[] idByCard = Arrays.stream(newSectionIdSet.split("_"))
                 .mapToLong(Long::parseLong)
                 .toArray();
-
-        /////////////////////
 
         long[] idByCardAddPositionId = new long[idByCard.length + 1];
         for (int i = 0; i < cardPosition; i++) {
