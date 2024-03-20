@@ -9,13 +9,12 @@ import java.util.List;
 
 @Service
 public interface SectionService {
-    SectionResponseDto createSection(SectionRequestDto requestDto);
+    SectionResponseDto createSection(SectionRequestDto requestDto, Long boardId);
 
-    void deleteSection(Long sectionId);
+    void deleteSection(Long sectionId, Long boardId);
 
-    SectionResponseDto updateSection(Long sectionId, SectionRequestDto requestDto);
+    List<SectionResponseDto> sortSection(Long boardId);
+    SectionResponseDto updateSection(Long sectionId, SectionRequestDto requestDto, Long boardId);
 
-    List<SectionResponseDto> getAllSection();
-
-    List<SectionResponseDto> updateNextpos(Long selectedSectionId,Long changeSectionId);
+    List<SectionResponseDto> updateNextpos(Long selectedSectionId,Long changeSectionId, Long boardId);
 }

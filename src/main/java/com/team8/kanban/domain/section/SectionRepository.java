@@ -11,4 +11,9 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
 
     @Query("SELECT s FROM Section s WHERE s.id NOT IN (SELECT sec.next FROM Section sec WHERE sec.next IS NOT NULL)")
     Section findHeadEntities();
+
+    @Query("SELECT s FROM Section s WHERE s.next IS NULL")
+    Section findLastSection();
+
+    boolean existsByBoard_BoardIdAndId(Long boardId, Long sectionId);
 }
