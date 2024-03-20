@@ -42,10 +42,10 @@
 //        loginUser = User.builder().username("dosal").password("123456789").build();
 //        userRepository.save(loginUser);
 //        card1 = Card.builder().cardName("testcard1").description("testdes1").userid(loginUser.getId()).username("dosal")
-//                .expiredDate(LocalDateTime.now().plusDays(1)).colorEnum(RED).build();
+//                .expiredDate(LocalDateTime.now().plusDays(1)).colorEnum(RED).sectionId(1L).position(1L).build();
 //        cardRepository.save(card1);
 //        card2 = Card.builder().cardName("testcard2").description("testdes2").userid(loginUser.getId()).username("dosal")
-//                .expiredDate(LocalDateTime.now().plusDays(1)).colorEnum(BLACK).build();
+//                .expiredDate(LocalDateTime.now().plusDays(1)).colorEnum(BLACK).sectionId(1L).position(2L).build();
 //        cardRepository.save(card2);
 //    }
 //
@@ -54,19 +54,22 @@
 //    void test1() {
 //        //given
 //        setup();
+//        Long sectionId = 1L;
 //        //when
-//        List<CardResponse> responses = cardRepositoryImpl.findCards();
+//        List<CardResponse> responses = cardRepositoryImpl.findCards(sectionId);
 //
 //        //then
 //        assertEquals(2, responses.size());
+//        assertEquals(1, responses.get(0).getPosition());
 //    }
 //
 //    @Test
 //    @DisplayName("전체 카드 조회 -카드가없을때")
 //    void test2() {
 //        //given
+//        Long sectionId = 1L;
 //        //when
-//        List<CardResponse> responses = cardRepositoryImpl.findCards();
+//        List<CardResponse> responses = cardRepositoryImpl.findCards(sectionId);
 //
 //        //then
 //        assertEquals(0, responses.size());

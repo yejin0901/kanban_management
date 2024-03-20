@@ -73,9 +73,15 @@
 //        CardResponse response2 = CardResponse.builder().cardId(2L).cardName("testcard2").description("testdes2").username("dosal")
 //                .expiredDate(LocalDateTime.now().plusDays(1)).createdAt(LocalDateTime.now()).modifiedAt(LocalDateTime.now()).build();
 //        given(cardService.getCards(any(Long.class))).willReturn(responseList);
+//        Long sectionId = 1L;
+//
+//        String getInfo = objectMapper.writeValueAsString(sectionId);
 //
 //        //when-then
-//        mockMvc.perform(get("/cards"))
+//        mockMvc.perform(get("/cards")
+//                        .content(getInfo)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .accept(MediaType.APPLICATION_JSON))
 //                .andExpect(status().is2xxSuccessful())
 //                .andExpect(jsonPath("$.msg").value("조회 되었습니다."))
 //                .andExpect(jsonPath("$.data").exists())
@@ -88,9 +94,15 @@
 //        //given
 //        List<CardResponse> responseList = new ArrayList<>();
 //        given(cardService.getCards(any(Long.class))).willReturn(responseList);
+//        Long sectionId = 1L;
+//
+//        String getInfo = objectMapper.writeValueAsString(sectionId);
 //
 //        //when-then
-//        mockMvc.perform(get("/cards"))
+//        mockMvc.perform(get("/cards")
+//                        .content(getInfo)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .accept(MediaType.APPLICATION_JSON))
 //                .andExpect(status().is2xxSuccessful())
 //                .andExpect(jsonPath("$.msg").value("조회 되었습니다."))
 //                .andExpect(jsonPath("$.data").isEmpty())
@@ -124,7 +136,7 @@
 //        mockMvc.perform(get("/cards/{cardId}", 1L))
 //                .andExpect(status().is4xxClientError())
 //                .andExpect(jsonPath("$.msg").value("해당하는 카드가 없습니다."))
-//                .andExpect(jsonPath("$.data").isEmpty())
+//                .andExpect(jsonPath("$.data.state").value("BAD_REQUEST"))
 //                .andDo(print());
 //    }
 //
@@ -198,7 +210,7 @@
 //                        .accept(MediaType.APPLICATION_JSON))
 //                .andExpect(status().is4xxClientError())
 //                .andExpect(jsonPath("$.msg").value("해당하는 카드가 없습니다."))
-//                .andExpect(jsonPath("$.data").isEmpty())
+//                .andExpect(jsonPath("$.data.state").value("BAD_REQUEST"))
 //                .andDo(print());
 //    }
 //
@@ -220,7 +232,7 @@
 //                        .accept(MediaType.APPLICATION_JSON))
 //                .andExpect(status().is4xxClientError())
 //                .andExpect(jsonPath("$.msg").value("권한이 없습니다."))
-//                .andExpect(jsonPath("$.data").isEmpty())
+//                .andExpect(jsonPath("$.data.state").value("BAD_REQUEST"))
 //                .andDo(print());
 //    }
 //
@@ -249,7 +261,7 @@
 //        mockMvc.perform(delete("/cards/{cardId}", 1L))
 //                .andExpect(status().is4xxClientError())
 //                .andExpect(jsonPath("$.msg").value("해당하는 카드가 없습니다."))
-//                .andExpect(jsonPath("$.data").isEmpty())
+//                .andExpect(jsonPath("$.data.state").value("BAD_REQUEST"))
 //                .andDo(print());
 //    }
 //
@@ -265,7 +277,7 @@
 //        mockMvc.perform(delete("/cards/{cardId}", 1L))
 //                .andExpect(status().is4xxClientError())
 //                .andExpect(jsonPath("$.msg").value("권한이 없습니다."))
-//                .andExpect(jsonPath("$.data").isEmpty())
+//                .andExpect(jsonPath("$.data.state").value("BAD_REQUEST"))
 //                .andDo(print());
 //    }
 //

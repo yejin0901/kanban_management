@@ -40,16 +40,17 @@
 //    void test1() {
 //        //given
 //        List<CardResponse> responseList = new ArrayList<>();
-//        CardResponse response1 = CardResponse.builder().cardId(1L).cardName("testcard1").description("testdes1").username("dosal")
+//        CardResponse response1 = CardResponse.builder().cardId(1L).cardName("testcard1").description("testdes1").username("dosal").sectionId(1L).position(1L)
 //                .expiredDate(LocalDateTime.now().plusDays(1)).createdAt(LocalDateTime.now()).modifiedAt(LocalDateTime.now()).build();
-//        CardResponse response2 = CardResponse.builder().cardId(2L).cardName("testcard2").description("testdes2").username("dosal")
+//        CardResponse response2 = CardResponse.builder().cardId(2L).cardName("testcard2").description("testdes2").username("dosal").sectionId(1L).position(2L)
 //                .expiredDate(LocalDateTime.now().plusDays(1)).createdAt(LocalDateTime.now()).modifiedAt(LocalDateTime.now()).build();
+//        Long sectionId = 1L;
 //        responseList.add(response1);
 //        responseList.add(response2);
-//        given(cardRepository.findCards()).willReturn(responseList);
+//        given(cardRepository.findCards(any(Long.class))).willReturn(responseList);
 //
 //        //when
-//        List<CardResponse> responses = cardService.getCards();
+//        List<CardResponse> responses = cardService.getCards(sectionId);
 //
 //        //then
 //        assertEquals(2, responses.size());
