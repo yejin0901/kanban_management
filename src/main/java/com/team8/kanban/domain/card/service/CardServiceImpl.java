@@ -117,6 +117,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    @Transactional
     public Boolean addUserByCard(User user, Long userId, Long cardId) {
         checkOwnerCard(user.getId(), cardId);
         Card card = findCard(cardId);
@@ -133,6 +134,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    @Transactional
     public Boolean deleteUserByCard(User user, Long userId, Long cardId) {
         checkOwnerCard(user.getId(), cardId);
         Card card = findCard(cardId);
@@ -169,7 +171,11 @@ public class CardServiceImpl implements CardService {
     }
 
     private List<Card> findCardInSectionOrderByCardId(Long sectionId){
-        return cardRepository.findCardsBySectionId(sectionId);
+        List<Card> cardList = cardRepository.findCardsBySectionId(sectionId);
+        if(!cardList.isEmpty()){
+            return cardList;
+        }
+        throw new IllegalArgumentException("해당 section에 Card가 존재하지 않습니다.");
     }
 
 
