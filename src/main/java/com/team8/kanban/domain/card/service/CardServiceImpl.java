@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -71,17 +70,12 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional
-    public List<CardResponse> changePosition(Long sectionId, String cardIdSet) {
-        long[] idByCard = Arrays.stream(cardIdSet.split("_"))
-                .mapToLong(Long::parseLong)
-                .toArray();
-        List<Card> positionUpdateByCards = cardRepository.findCardsBySectionId(sectionId);
+    public List<CardResponse> changePosition(Long sectionId, Long[] cardIdSet) {
+        List<Card> positionUpdateByCards = findCardInSectionOrderByCardId(sectionId);
 
-
-        for (int i = 0; i < idByCard.length; i++) {
-
+        for (int i = 0; i < cardIdSet.length; i++) {
             for (int j = 0; j < positionUpdateByCards.size(); j++) {
-                if (idByCard[i] == positionUpdateByCards.get(j).getCardId()) {
+                if (cardIdSet[i] == positionUpdateByCards.get(j).getCardId()) {
                     positionUpdateByCards.get(j).setPosition(i);
                     continue;
                 }
@@ -93,26 +87,21 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional
-    public List<CardResponse> changeSection(Long cardId, Long newSectionId, String newSectionIdSet, Long cardPosition) {
+    public List<CardResponse> changeSection(Long cardId, Long newSectionId, Long[] newSectionIdSet, Long cardPosition) {
         Card sectionUpdateCard = findCard(cardId);
         sectionUpdateCard.setSection(newSectionId);
         cardRepository.save(sectionUpdateCard);
 
-        //cardId 10, cardPositionId 2 ,newSectionIdSet 9_8_7_6_5_4 -> 9_8_10_7_6_5_4
-        long[] idByCard = Arrays.stream(newSectionIdSet.split("_"))
-                .mapToLong(Long::parseLong)
-                .toArray();
-
-        long[] idByCardAddPositionId = new long[idByCard.length + 1];
+        long[] idByCardAddPositionId = new long[newSectionIdSet.length + 1];
         for (int i = 0; i < cardPosition; i++) {
-            idByCardAddPositionId[i] = idByCard[i];
+            idByCardAddPositionId[i] = newSectionIdSet[i];
         }
         idByCardAddPositionId[Math.toIntExact(cardPosition)] = cardId;
         for (int i = (int) (cardPosition + 1); i < idByCardAddPositionId.length; i++) {
-            idByCardAddPositionId[i] = idByCard[i - 1];
+            idByCardAddPositionId[i] = newSectionIdSet[i - 1];
         }
 
-        List<Card> positionUpdateByCards = cardRepository.findCardsBySectionId(newSectionId);
+        List<Card> positionUpdateByCards = findCardInSectionOrderByCardId(newSectionId);
 
         for (int i = 0; i < idByCardAddPositionId.length; i++) {
             //positionUpdateByCard: 1 2 3 14 13 12
@@ -130,16 +119,14 @@ public class CardServiceImpl implements CardService {
     @Override
     public Boolean addUserByCard(User user, Long userId, Long cardId) {
         checkOwnerCard(user.getId(), cardId);
-        //추가할 카드와 user 가져오기
         Card card = findCard(cardId);
         User addUser = findUser(userId);
-        //CardUser에서 가져오기
+
         CardUser checkUser = findUserInCard(addUser.getId(), card.getCardId());
-        //있으면 excetpion
         if (!Objects.isNull(checkUser)) {
             throw new IllegalArgumentException("이미 공동작성자인 유저 입니다.");
         }
-        //inset
+
         CardUser addUserInCard = new CardUser(card, addUser);
         cardUserRepository.save(addUserInCard);
         return true;
@@ -148,20 +135,18 @@ public class CardServiceImpl implements CardService {
     @Override
     public Boolean deleteUserByCard(User user, Long userId, Long cardId) {
         checkOwnerCard(user.getId(), cardId);
-        //추가할 카드와 user 가져오기
         Card card = findCard(cardId);
         User addUser = findUser(userId);
-        //carduser에서 가져오기
+
         CardUser cardUser = findUserInCard(addUser.getId(), card.getCardId());
-        //값이없으면 등록안되있다고 exception
+
         if (Objects.isNull(cardUser)) {
             throw new IllegalArgumentException("공동작성자로 등록되지 않은 유저입니다.");
         }
-        //삭제
+
         cardUserRepository.delete(cardUser);
         return true;
     }
-
 
     private CardUser findUserInCard(Long userId, Long cardId) {
         return cardUserRepository.findByUserInCard(userId, cardId);
@@ -182,6 +167,11 @@ public class CardServiceImpl implements CardService {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
     }
+
+    private List<Card> findCardInSectionOrderByCardId(Long sectionId){
+        return cardRepository.findCardsBySectionId(sectionId);
+    }
+
 
     private CardResponse toResponse(Card card) {
         return CardResponse.builder()

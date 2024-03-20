@@ -23,7 +23,7 @@ public class SectionChangeRequest {
     private Long newSectionId;
 
     @NotEmpty
-    private String newSectionIdSet;
+    private Long[] newSectionIdSet;
 
     @Positive
     @NotNull

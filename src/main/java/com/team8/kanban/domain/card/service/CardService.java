@@ -61,7 +61,7 @@ public interface CardService {
      * @param cardIdSet position으로 정렬했을때의 cardId값의 순서
      * @return 변경된 position으로 정렬
      */
-    List<CardResponse> changePosition(Long sectionId, String cardIdSet);
+    List<CardResponse> changePosition(Long sectionId, Long[] cardIdSet);
 
 
     /**
@@ -73,7 +73,7 @@ public interface CardService {
      * @param cardPosition    이동한 Section의 position
      * @return List<CardResponse> 변경된 section을 정렬 후 조회
      */
-    List<CardResponse> changeSection(Long cardId, Long newSectionId, String newSectionIdSet, Long cardPosition);
+    List<CardResponse> changeSection(Long cardId, Long newSectionId, Long[] newSectionIdSet, Long cardPosition);
 
     /**
      * 카드에 공통작업자 추가

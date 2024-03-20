@@ -17,5 +17,5 @@ public class PositionChangeRequest {
     @NotNull
     private Long sectionId;
     @NotEmpty
-    private String positionSet;
+    private Long[] positionSet;
 }
