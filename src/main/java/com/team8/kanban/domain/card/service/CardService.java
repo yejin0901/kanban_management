@@ -70,9 +70,29 @@ public interface CardService {
      * @param cardId          section을 변경할 cardId
      * @param newSectionId    이동한 Section Id
      * @param newSectionIdSet 바뀐 Section의 현재 position으로 정렬했을때의 cardId값의 순서
-     * @param cardPosition  이동한 Section의 position
+     * @param cardPosition    이동한 Section의 position
      * @return List<CardResponse> 변경된 section을 정렬 후 조회
      */
     List<CardResponse> changeSection(Long cardId, Long newSectionId, String newSectionIdSet, Long cardPosition);
+
+    /**
+     * 카드에 공통작업자 추가
+     *
+     * @param user   로그인한 유저의 정보
+     * @param userId 작업자로 추가 할 유저 id
+     * @param cardId 작업자 추가 할 카드 id
+     * @return 성공시 true 반환
+     */
+    Boolean addUserByCard(User user, Long userId, Long cardId);
+
+    /**
+     * 카드에 공통작업자 삭제
+     *
+     * @param user   로그인한 유저의 정보
+     * @param userId 공통작업자에서 삭제 할 유저 id
+     * @param cardId 작업자 삭제 할 카드 id
+     * @return 성공시 true 반환
+     */
+    Boolean deleteUserByCard(User user, Long userId, Long cardId);
 }
 

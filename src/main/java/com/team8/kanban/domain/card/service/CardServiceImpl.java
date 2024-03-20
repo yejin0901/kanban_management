@@ -4,8 +4,11 @@ import com.team8.kanban.domain.card.dto.CardResponse;
 import com.team8.kanban.domain.card.dto.CreateCardRequest;
 import com.team8.kanban.domain.card.dto.UpdateCardRequest;
 import com.team8.kanban.domain.card.entity.Card;
+import com.team8.kanban.domain.card.entity.CardUser;
 import com.team8.kanban.domain.card.repository.CardRepository;
+import com.team8.kanban.domain.card.repository.CardUserRepository;
 import com.team8.kanban.domain.user.User;
+import com.team8.kanban.domain.user.UserRepository;
 import com.team8.kanban.global.entity.ColorEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,12 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class CardServiceImpl implements CardService {
 
     private final CardRepository cardRepository;
+    private final CardUserRepository cardUserRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -121,10 +127,54 @@ public class CardServiceImpl implements CardService {
         return cardRepository.findCards(newSectionId);
     }
 
+    @Override
+    public Boolean addUserByCard(User user, Long userId, Long cardId) {
+        checkOwnerCard(user.getId(), cardId);
+        //추가할 카드와 user 가져오기
+        Card card = findCard(cardId);
+        User addUser = findUser(userId);
+        //CardUser에서 가져오기
+        CardUser checkUser = findUserInCard(addUser.getId(), card.getCardId());
+        //있으면 excetpion
+        if (!Objects.isNull(checkUser)) {
+            throw new IllegalArgumentException("이미 공동작성자인 유저 입니다.");
+        }
+        //inset
+        CardUser addUserInCard = new CardUser(card, addUser);
+        cardUserRepository.save(addUserInCard);
+        return true;
+    }
+
+    @Override
+    public Boolean deleteUserByCard(User user, Long userId, Long cardId) {
+        checkOwnerCard(user.getId(), cardId);
+        //추가할 카드와 user 가져오기
+        Card card = findCard(cardId);
+        User addUser = findUser(userId);
+        //carduser에서 가져오기
+        CardUser cardUser = findUserInCard(addUser.getId(), card.getCardId());
+        //값이없으면 등록안되있다고 exception
+        if (Objects.isNull(cardUser)) {
+            throw new IllegalArgumentException("공동작성자로 등록되지 않은 유저입니다.");
+        }
+        //삭제
+        cardUserRepository.delete(cardUser);
+        return true;
+    }
+
+
+    private CardUser findUserInCard(Long userId, Long cardId) {
+        return cardUserRepository.findByUserInCard(userId, cardId);
+    }
 
     private Card findCard(Long cardId) {
         return cardRepository.findById(cardId).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 카드가 없습니다."));
+    }
+
+    private User findUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 유저가 없습니다."));
     }
 
     private void checkOwnerCard(Long userId, Long cardByUserId) {

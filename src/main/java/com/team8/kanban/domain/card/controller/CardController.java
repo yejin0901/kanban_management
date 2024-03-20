@@ -1,7 +1,7 @@
 package com.team8.kanban.domain.card.controller;
 
-import com.team8.kanban.domain.card.service.CardService;
 import com.team8.kanban.domain.card.dto.*;
+import com.team8.kanban.domain.card.service.CardService;
 import com.team8.kanban.global.common.CommonResponse;
 import com.team8.kanban.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
@@ -102,6 +102,32 @@ public class CardController {
                                 request.getNewSectionId(),
                                 request.getNewSectionIdSet(),
                                 request.getCardPositionId()))
+                        .build());
+    }
+
+    //카드에 유저 추가
+    @PostMapping("/{cardId}/user")
+    public ResponseEntity<CommonResponse<Boolean>> addUserByCard(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody UserInCardRequest request,
+            @PathVariable Long cardId) {
+        return ResponseEntity.status(HttpStatus.OK.value())
+                .body(CommonResponse.<Boolean>builder()
+                        .msg("추가 되었습니다.")
+                        .data(cardService.addUserByCard(userDetails.getUser(), request.getUserId(), cardId))
+                        .build());
+    }
+
+    //카드에 유저 삭제
+    @DeleteMapping("/{cardId}/user")
+    public ResponseEntity<CommonResponse<Boolean>> deleteUserByCard(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody UserInCardRequest request,
+            @PathVariable Long cardId) {
+        return ResponseEntity.status(HttpStatus.OK.value())
+                .body(CommonResponse.<Boolean>builder()
+                        .msg("삭제 되었습니다.")
+                        .data(cardService.deleteUserByCard(userDetails.getUser(), request.getUserId(), cardId))
                         .build());
     }
 }
