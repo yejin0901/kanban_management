@@ -1,8 +1,9 @@
 //package com.team8.kanban.card;
 //
-//import com.team8.kanban.domain.card.Card;
-//import com.team8.kanban.domain.card.CardRepository;
-//import com.team8.kanban.domain.card.CardRepositoryImpl;
+//
+//import com.team8.kanban.domain.card.entity.Card;
+//import com.team8.kanban.domain.card.repository.CardRepository;
+//import com.team8.kanban.domain.card.repository.CardRepositoryImpl;
 //import com.team8.kanban.domain.card.dto.CardResponse;
 //import com.team8.kanban.domain.user.User;
 //import com.team8.kanban.domain.user.UserRepository;

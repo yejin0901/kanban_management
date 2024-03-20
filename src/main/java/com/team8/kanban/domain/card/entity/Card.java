@@ -1,4 +1,4 @@
-package com.team8.kanban.domain.card;
+package com.team8.kanban.domain.card.entity;
 
 import com.team8.kanban.domain.card.dto.UpdateCardRequest;
 import com.team8.kanban.global.entity.ColorEnum;

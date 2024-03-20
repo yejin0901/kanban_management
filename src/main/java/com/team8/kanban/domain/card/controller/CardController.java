@@ -1,5 +1,6 @@
-package com.team8.kanban.domain.card;
+package com.team8.kanban.domain.card.controller;
 
+import com.team8.kanban.domain.card.service.CardService;
 import com.team8.kanban.domain.card.dto.*;
 import com.team8.kanban.global.common.CommonResponse;
 import com.team8.kanban.global.security.UserDetailsImpl;

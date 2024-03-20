@@ -1,5 +1,6 @@
-package com.team8.kanban.domain.card;
+package com.team8.kanban.domain.card.repository;
 
+import com.team8.kanban.domain.card.entity.Card;
 import com.team8.kanban.domain.card.dto.CardResponse;
 
 import java.util.List;

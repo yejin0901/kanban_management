@@ -1,4 +1,4 @@
-package com.team8.kanban.domain.card;
+package com.team8.kanban.domain.card.service;
 
 import com.team8.kanban.domain.card.dto.CardResponse;
 import com.team8.kanban.domain.card.dto.CreateCardRequest;

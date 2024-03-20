@@ -1,8 +1,8 @@
 //package com.team8.kanban.card;
 //
 //import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.team8.kanban.domain.card.CardController;
-//import com.team8.kanban.domain.card.CardService;
+//import com.team8.kanban.domain.card.controller.CardController;
+//import com.team8.kanban.domain.card.service.CardService;
 //import com.team8.kanban.domain.card.dto.CardResponse;
 //import com.team8.kanban.domain.card.dto.CreateCardRequest;
 //import com.team8.kanban.domain.card.dto.UpdateCardRequest;

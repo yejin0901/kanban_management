@@ -1,8 +1,10 @@
-package com.team8.kanban.domain.card;
+package com.team8.kanban.domain.card.service;
 
 import com.team8.kanban.domain.card.dto.CardResponse;
 import com.team8.kanban.domain.card.dto.CreateCardRequest;
 import com.team8.kanban.domain.card.dto.UpdateCardRequest;
+import com.team8.kanban.domain.card.entity.Card;
+import com.team8.kanban.domain.card.repository.CardRepository;
 import com.team8.kanban.domain.user.User;
 import com.team8.kanban.global.entity.ColorEnum;
 import lombok.RequiredArgsConstructor;
