@@ -1,8 +1,8 @@
 package com.team8.kanban.domain.board.service;
 
-import com.team8.kanban.domain.board.dto.BoardInviteRequestDto;
 import com.team8.kanban.domain.board.dto.BoardRequestDto;
 import com.team8.kanban.domain.board.dto.BoardResponseDto;
+import com.team8.kanban.domain.board.dto.BoardUserRequestDto;
 import com.team8.kanban.domain.board.dto.BoardUserResponseDto;
 import com.team8.kanban.domain.user.User;
 import java.util.List;
@@ -49,11 +49,11 @@ public interface BoardService {
      *
      * @param user 로그인한 유저 정보
      * @param boardId 초대할 보드 ID
-     * @param boardInviteRequestDto 초대할 유저 ID 리스트
+     * @param boardUserRequestDto 초대할 유저 ID 리스트
      * @return 보드 사용 유저 리스트
      */
-    List<BoardUserResponseDto> inviteBoard(User user, Long boardId,
-        BoardInviteRequestDto boardInviteRequestDto);
+    List<BoardUserResponseDto> inviteBoardUser(User user, Long boardId,
+        BoardUserRequestDto boardUserRequestDto);
 
     /**
      *보드 유저 조회
@@ -64,4 +64,14 @@ public interface BoardService {
      */
     List<BoardUserResponseDto> getBoardUsers(User user, Long boardId);
 
+    /**
+     * 보드 유저 삭제
+     *
+     * @param user                로그인한 유저 정보
+     * @param boardId             유저를 삭제할 보드 ID
+     * @param boardUserRequestDto 삭제할 유저 ID 리스트
+     * @return 보드 사용 유저 리스트
+     */
+    List<BoardUserResponseDto> deleteBoardUser(User user, Long boardId,
+        BoardUserRequestDto boardUserRequestDto);
 }

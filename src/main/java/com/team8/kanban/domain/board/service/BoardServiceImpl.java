@@ -1,8 +1,13 @@
 package com.team8.kanban.domain.board.service;
 
-import com.team8.kanban.domain.board.dto.BoardInviteRequestDto;
+import static com.team8.kanban.global.exception.ErrorCode.BOARD_AUTHORIZED;
+import static com.team8.kanban.global.exception.ErrorCode.BOARD_NOT_FOUND;
+import static com.team8.kanban.global.exception.ErrorCode.BOARD_USER_NOT_FOUND;
+import static com.team8.kanban.global.exception.ErrorCode.NOT_BOARD_CREATED_USER;
+
 import com.team8.kanban.domain.board.dto.BoardRequestDto;
 import com.team8.kanban.domain.board.dto.BoardResponseDto;
+import com.team8.kanban.domain.board.dto.BoardUserRequestDto;
 import com.team8.kanban.domain.board.dto.BoardUserResponseDto;
 import com.team8.kanban.domain.board.entity.Board;
 import com.team8.kanban.domain.board.entity.BoardUser;
@@ -10,6 +15,8 @@ import com.team8.kanban.domain.board.repository.BoardRepository;
 import com.team8.kanban.domain.board.repository.BoardUserRepository;
 import com.team8.kanban.domain.user.User;
 import com.team8.kanban.domain.user.UserRepository;
+import com.team8.kanban.global.exception.customException.NotAuthorizedException;
+import com.team8.kanban.global.exception.customException.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -21,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Getter
 @Transactional(readOnly = true)
-public class BoardServiceImpl implements BoardService{
+public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final BoardUserRepository boardUserRepository;
@@ -71,15 +78,15 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     @Transactional
-    public List<BoardUserResponseDto> inviteBoard(User user, Long boardId,
-        BoardInviteRequestDto boardInviteRequestDto) {
+    public List<BoardUserResponseDto> inviteBoardUser(User user, Long boardId,
+        BoardUserRequestDto boardUserRequestDto) {
         Board board = findBoard(boardId);
         validateUser(user, board);
-        List<Long> invitedUserIds = boardInviteRequestDto.getInvitedUserIds();
+        List<Long> invitedUserIds = boardUserRequestDto.getUserIds();
 
         for (Long invitedUserId : invitedUserIds) {
             User invitedUser = userRepository.findById(invitedUserId).orElseThrow(
-                () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
+                () -> new NotFoundException(BOARD_USER_NOT_FOUND));
             if (boardUserRepository.existsByBoardAndUser(board, invitedUser)) {
                 throw new IllegalArgumentException("이미 초대된 유저입니다.");
             }
@@ -100,20 +107,41 @@ public class BoardServiceImpl implements BoardService{
         return boardUsers.stream().map(BoardUserResponseDto::new).toList();
     }
 
+    @Transactional
+    @Override
+    public List<BoardUserResponseDto> deleteBoardUser(User user, Long boardId,
+        BoardUserRequestDto boardUserRequestDto) {
+
+        Board board = findBoard(boardId);
+        validateCreatedUser(user, board);
+        List<Long> deleteUserIds = boardUserRequestDto.getUserIds();
+
+        for (Long deleteUserId : deleteUserIds) {
+            if (deleteUserId.equals(user.getId())) {
+                throw new IllegalArgumentException("보드 생성자는 이용 유저에서 삭제될 수 없습니다.");
+            }
+            BoardUser boardUser = boardUserRepository.findByBoardAndUserId(board, deleteUserId);
+            boardUserRepository.delete(boardUser);
+        }
+
+        List<BoardUser> boardUsers = boardUserRepository.findAllByBoard(board);
+        return boardUsers.stream().map(BoardUserResponseDto::new).toList();
+    }
+
     private Board findBoard(Long boardId) {
         return boardRepository.findById(boardId).orElseThrow(
-            () -> new IllegalArgumentException("해당 보드는 존재하지 않습니다."));
+            () -> new NotFoundException(BOARD_NOT_FOUND));
     }
 
     private void validateUser(User user, Board board) {
         if (!boardUserRepository.existsByBoardAndUser(board, user)) {
-            throw new IllegalArgumentException("접근 권한이 없습니다.");
+            throw new NotAuthorizedException(BOARD_AUTHORIZED);
         }
     }
 
     private void validateCreatedUser(User user, Board board) {
         if (!board.getCreatedUserId().equals(user.getId())) {
-            throw new IllegalArgumentException("보드를 생성한 유저가 아닙니다.");
+            throw new NotAuthorizedException(NOT_BOARD_CREATED_USER);
         }
     }
 }

@@ -1,11 +1,8 @@
 package com.team8.kanban.domain.board.controller;
 
-import com.team8.kanban.domain.board.dto.BoardInviteRequestDto;
 import com.team8.kanban.domain.board.dto.BoardRequestDto;
 import com.team8.kanban.domain.board.dto.BoardResponseDto;
-import com.team8.kanban.domain.board.dto.BoardUserResponseDto;
 import com.team8.kanban.domain.board.service.BoardService;
-import com.team8.kanban.domain.board.service.BoardServiceImpl;
 import com.team8.kanban.global.common.CommonResponse;
 import com.team8.kanban.global.security.UserDetailsImpl;
 import java.util.List;
@@ -19,15 +16,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/boards")
 public class BoardController {
 
     private final BoardService boardService;
 
-    @PostMapping("/boards")
+    @PostMapping
     public ResponseEntity<CommonResponse<BoardResponseDto>> createBoard(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @RequestBody BoardRequestDto boardRequestDto) {
@@ -38,7 +37,7 @@ public class BoardController {
                 .build());
     }
 
-    @GetMapping("/boards")
+    @GetMapping
     public ResponseEntity<CommonResponse<List<BoardResponseDto>>> getBoards(
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<BoardResponseDto> boardResponseDtos = boardService.getBoard(userDetails.getUser());
@@ -47,7 +46,7 @@ public class BoardController {
                 .msg("보드 조회 완료").build());
     }
 
-    @PutMapping("/boards/{boardId}")
+    @PutMapping("/{boardId}")
     public ResponseEntity<CommonResponse<BoardResponseDto>> updateBoard(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @RequestBody BoardRequestDto boardRequestDto,
@@ -59,35 +58,12 @@ public class BoardController {
                 .build());
     }
 
-    @DeleteMapping("/boards/{boardId}")
+    @DeleteMapping("/{boardId}")
     public ResponseEntity<CommonResponse<Void>> deleteBoard(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long boardId) {
         boardService.deleteBoard(userDetails.getUser(), boardId);
         return ResponseEntity.status(HttpStatus.OK.value())
             .body(CommonResponse.<Void>builder().msg("보드 삭제 완료").build());
-    }
-
-    @PostMapping("/boards/{boardId}")
-    public ResponseEntity<CommonResponse<List<BoardUserResponseDto>>> inviteBoard(
-        @AuthenticationPrincipal UserDetailsImpl userDetails,
-        @PathVariable Long boardId,
-        @RequestBody BoardInviteRequestDto boardInviteRequestDto) {
-        List<BoardUserResponseDto> boardUserResponseDtos = boardService.inviteBoard(
-            userDetails.getUser(), boardId, boardInviteRequestDto);
-        return ResponseEntity.status(HttpStatus.OK.value())
-            .body(CommonResponse.<List<BoardUserResponseDto>>builder().data(boardUserResponseDtos)
-                .msg("보드 초대 완료").build());
-    }
-
-    @GetMapping("/boards/{boardId}")
-    public ResponseEntity<CommonResponse<List<BoardUserResponseDto>>> getBoardUsers(
-        @AuthenticationPrincipal UserDetailsImpl userDetails,
-        @PathVariable Long boardId) {
-        List<BoardUserResponseDto> boardUserResponseDtos = boardService.getBoardUsers(
-            userDetails.getUser(), boardId);
-        return ResponseEntity.status(HttpStatus.OK.value())
-            .body(CommonResponse.<List<BoardUserResponseDto>>builder().data(boardUserResponseDtos)
-                .msg("보드 유저 조회 완료").build());
     }
 }
