@@ -1,5 +1,6 @@
 package com.team8.kanban.domain.card.service;
 
+import com.team8.kanban.domain.card.dto.CardCommentResponse;
 import com.team8.kanban.domain.card.dto.CardResponse;
 import com.team8.kanban.domain.card.dto.CreateCardRequest;
 import com.team8.kanban.domain.card.dto.UpdateCardRequest;
@@ -203,5 +204,12 @@ public class CardServiceImpl implements CardService {
                 .colorEnum(ColorEnum.valueOf(request.getColor()))
                 .sectionId(request.getSectionId())
                 .build();
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CardCommentResponse> testGetCards(Long sectionId) {
+        return cardRepository.cardComment(sectionId);
     }
 }

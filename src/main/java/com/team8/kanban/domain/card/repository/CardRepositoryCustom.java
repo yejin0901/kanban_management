@@ -1,5 +1,6 @@
 package com.team8.kanban.domain.card.repository;
 
+import com.team8.kanban.domain.card.dto.CardCommentResponse;
 import com.team8.kanban.domain.card.entity.Card;
 import com.team8.kanban.domain.card.dto.CardResponse;
 
@@ -30,4 +31,7 @@ public interface CardRepositoryCustom {
      * @return List<Card>
      */
     List<Card> findCardsBySectionId(Long sectionId);
+
+
+    List<CardCommentResponse> cardComment(Long sectionId);
 }

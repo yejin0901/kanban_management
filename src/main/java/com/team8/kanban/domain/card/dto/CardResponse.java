@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Getter
@@ -23,6 +24,5 @@ public class CardResponse {
     private LocalDateTime modifiedAt;
     private Long sectionId;
     private Long position;
-    private Long commentId;
 
 }

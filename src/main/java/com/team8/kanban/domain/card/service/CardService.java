@@ -1,5 +1,6 @@
 package com.team8.kanban.domain.card.service;
 
+import com.team8.kanban.domain.card.dto.CardCommentResponse;
 import com.team8.kanban.domain.card.dto.CardResponse;
 import com.team8.kanban.domain.card.dto.CreateCardRequest;
 import com.team8.kanban.domain.card.dto.UpdateCardRequest;
@@ -94,5 +95,9 @@ public interface CardService {
      * @return 성공시 true 반환
      */
     Boolean deleteUserByCard(User user, Long userId, Long cardId);
+
+
+
+    List<CardCommentResponse> testGetCards(Long sectionId);
 }
 

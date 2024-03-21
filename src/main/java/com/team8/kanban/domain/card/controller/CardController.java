@@ -130,4 +130,14 @@ public class CardController {
                         .data(cardService.deleteUserByCard(userDetails.getUser(), request.getUserId(), cardId))
                         .build());
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<CommonResponse<List<CardCommentResponse>>> testGetCards(
+            @Valid @RequestBody SectionIdCardRequest request) {
+        return ResponseEntity.status(HttpStatus.OK.value())
+                .body(CommonResponse.<List<CardCommentResponse>>builder()
+                        .msg("조회 되었습니다.")
+                        .data(cardService.testGetCards(request.getSectionId()))
+                        .build());
+    }
 }
