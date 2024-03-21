@@ -3,9 +3,15 @@ package com.team8.kanban.domain.board.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.team8.kanban.domain.board.dto.BoardSectionResponseDto;
+import com.team8.kanban.domain.board.dto.BoardUserResponseDto;
 import com.team8.kanban.domain.board.entity.Board;
+import com.team8.kanban.domain.board.entity.BoardUser;
+import com.team8.kanban.domain.board.entity.QBoardUser;
 import com.team8.kanban.domain.section.QSection;
 import com.team8.kanban.domain.section.SectionResponseDto;
+import com.team8.kanban.domain.user.User;
+import com.team8.kanban.global.exception.ErrorCode;
+import com.team8.kanban.global.exception.customException.NotAuthorizedException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,7 +24,9 @@ public class BoardQueryRepository {
 
     private QSection qSection = QSection.section;
 
-    public BoardSectionResponseDto findBoard(Board board) {
+    private QBoardUser qBoardUser = QBoardUser.boardUser;
+
+    public BoardSectionResponseDto findBoard(Board board, User user) {
 
         List<SectionResponseDto> sectionResponseDtos = jpaQueryFactory
             .select(Projections.constructor(SectionResponseDto.class, qSection))
@@ -26,7 +34,19 @@ public class BoardQueryRepository {
             .where(qSection.board.eq(board))
             .fetch();
 
-        return new BoardSectionResponseDto(board, sectionResponseDtos);
+        List<BoardUser> boardUsers = jpaQueryFactory
+            .selectFrom(qBoardUser)
+            .where(qBoardUser.board.eq(board))
+            .fetch();
+
+        if (boardUsers.stream()
+            .noneMatch(boardUser -> boardUser.getUser().getId().equals(user.getId()))) {
+            throw new NotAuthorizedException(ErrorCode.BOARD_USER_NOT_FOUND);
+        } else {
+            List<BoardUserResponseDto> boardUserResponseDtos = boardUsers.stream()
+                .map(BoardUserResponseDto::new).toList();
+            return new BoardSectionResponseDto(board, boardUserResponseDtos, sectionResponseDtos);
+        }
     }
 
 //    public List<BoardSectionResponseDto> findAllBoards(User user) {

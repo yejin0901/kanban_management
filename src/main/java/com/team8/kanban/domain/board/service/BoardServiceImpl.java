@@ -64,9 +64,8 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardSectionResponseDto getBoard(User user, Long boardId) {
         Board board = findBoard(boardId);
-        validateUser(user, board);
 
-        return boardQueryRepository.findBoard(board);
+        return boardQueryRepository.findBoard(board, user);
     }
 
     @Override
