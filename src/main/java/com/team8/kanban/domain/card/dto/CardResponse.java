@@ -23,5 +23,6 @@ public class CardResponse {
     private LocalDateTime modifiedAt;
     private Long sectionId;
     private Long position;
+    private Long commentId;
 
 }

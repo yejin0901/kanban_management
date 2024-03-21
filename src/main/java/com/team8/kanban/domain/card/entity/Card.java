@@ -40,6 +40,8 @@ public class Card extends TimeStamped {
 
     private Long position;
 
+    private Long commentId;
+
     public void update(UpdateCardRequest request) {
         if(request.getCardName() != null) this.cardName = request.getCardName();
         if(request.getDescription() != null) this.description = request.getDescription();
