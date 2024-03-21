@@ -13,7 +13,7 @@ public class BoardResponseDto {
     public BoardResponseDto(Board board) {
         boardId = board.getBoardId();
         boardName = board.getBoardName();
-        boardColor = board.getBoardColor();
+        boardColor = board.getBoardColor().toString();
         createdUserId = board.getCreatedUserId();
     }
 }
