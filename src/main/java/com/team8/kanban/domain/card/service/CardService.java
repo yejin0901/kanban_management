@@ -16,7 +16,7 @@ public interface CardService {
      * @param sectionId 조회할 section의 Id값
      * @return 해당 section의 Card Entity
      */
-    List<CardResponse> getCards(Long sectionId);
+    List<CardCommentResponse> getCards(Long sectionId);
 
     /**
      * 단일 카드 조회
@@ -24,8 +24,7 @@ public interface CardService {
      * @param cardId 조회할 카드 번호
      * @return 단일 Card Entity
      */
-    CardResponse getCard(Long cardId);
-
+    CardCommentResponse getCard(Long cardId);
 
     /**
      * 카드 신규 생성
@@ -62,8 +61,7 @@ public interface CardService {
      * @param cardIdSet position으로 정렬했을때의 cardId값의 순서
      * @return 변경된 position으로 정렬
      */
-    List<CardResponse> changePosition(Long sectionId, Long[] cardIdSet);
-
+    List<CardCommentResponse> changePosition(Long sectionId, Long[] cardIdSet);
 
     /**
      * 카드 section 변경
@@ -74,7 +72,7 @@ public interface CardService {
      * @param cardPosition    이동한 Section의 position
      * @return List<CardResponse> 변경된 section을 정렬 후 조회
      */
-    List<CardResponse> changeSection(Long cardId, Long newSectionId, Long[] newSectionIdSet, Long cardPosition);
+    List<CardCommentResponse> changeSection(Long cardId, Long newSectionId, Long[] newSectionIdSet, Long cardPosition);
 
     /**
      * 카드에 공통작업자 추가
@@ -95,9 +93,4 @@ public interface CardService {
      * @return 성공시 true 반환
      */
     Boolean deleteUserByCard(User user, Long userId, Long cardId);
-
-
-
-    List<CardCommentResponse> testGetCards(Long sectionId);
 }
-

@@ -39,8 +39,6 @@ public class Card extends TimeStamped {
 
     private Long position;
 
-    private Long commentId;
-
     public void update(UpdateCardRequest request) {
         if (request.getCardName() != null) this.cardName = request.getCardName();
         if (request.getDescription() != null) this.description = request.getDescription();
@@ -54,6 +52,5 @@ public class Card extends TimeStamped {
 
     public void setSection(long newSectionId) {
         this.sectionId = newSectionId;
-
     }
 }

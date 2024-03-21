@@ -2,7 +2,6 @@ package com.team8.kanban.domain.card.repository;
 
 import com.team8.kanban.domain.card.dto.CardCommentResponse;
 import com.team8.kanban.domain.card.entity.Card;
-import com.team8.kanban.domain.card.dto.CardResponse;
 
 import java.util.List;
 
@@ -12,17 +11,17 @@ public interface CardRepositoryCustom {
      * 단일 카드 조회
      *
      * @param cardId 조회 할 카드번호
-     * @return CardResponse
+     * @return CardCommentResponse
      */
-    CardResponse findCard(Long cardId);
+    CardCommentResponse findCard(Long cardId);
 
     /**
      * sectionId에 해당하는 section의 전체 카드 조회
      *
      * @param sectionId 조회할 section의 Id값
-     * @return List<CardResponse>
+     * @return List<CardCommentResponse>
      */
-    List<CardResponse> findCards(Long sectionId);
+    List<CardCommentResponse> findCards(Long sectionId);
 
     /**
      * sectionId에 해당하는 section의 전체 카드 조회
@@ -31,7 +30,4 @@ public interface CardRepositoryCustom {
      * @return List<Card>
      */
     List<Card> findCardsBySectionId(Long sectionId);
-
-
-    List<CardCommentResponse> cardComment(Long sectionId);
 }

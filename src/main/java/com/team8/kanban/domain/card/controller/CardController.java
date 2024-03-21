@@ -22,10 +22,10 @@ public class CardController {
 
     //카드 조회
     @GetMapping
-    public ResponseEntity<CommonResponse<List<CardResponse>>> getCards(
+    public ResponseEntity<CommonResponse<List<CardCommentResponse>>> getCards(
             @Valid @RequestBody SectionIdCardRequest request) {
         return ResponseEntity.status(HttpStatus.OK.value())
-                .body(CommonResponse.<List<CardResponse>>builder()
+                .body(CommonResponse.<List<CardCommentResponse>>builder()
                         .msg("조회 되었습니다.")
                         .data(cardService.getCards(request.getSectionId()))
                         .build());
@@ -33,15 +33,14 @@ public class CardController {
 
     //카드 개별조회
     @GetMapping("/{cardId}")
-    public ResponseEntity<CommonResponse<CardResponse>> getCard(
+    public ResponseEntity<CommonResponse<CardCommentResponse>> getCard(
             @PathVariable Long cardId) {
         return ResponseEntity.status(HttpStatus.OK.value())
-                .body(CommonResponse.<CardResponse>builder()
+                .body(CommonResponse.<CardCommentResponse>builder()
                         .msg("조회 되었습니다.")
                         .data(cardService.getCard(cardId))
                         .build());
     }
-
 
     //카드 입력
     @PostMapping
@@ -82,10 +81,10 @@ public class CardController {
 
     //position 변경
     @PostMapping("/position")
-    public ResponseEntity<CommonResponse<List<CardResponse>>> changePosition(
+    public ResponseEntity<CommonResponse<List<CardCommentResponse>>> changePosition(
             @Valid @RequestBody PositionChangeRequest request) {
         return ResponseEntity.status(HttpStatus.OK.value())
-                .body(CommonResponse.<List<CardResponse>>builder()
+                .body(CommonResponse.<List<CardCommentResponse>>builder()
                         .msg("position이 변경되었습니다.")
                         .data(cardService.changePosition(request.getSectionId(), request.getPositionSet()))
                         .build());
@@ -93,10 +92,10 @@ public class CardController {
 
     //SectionId 변경
     @PostMapping("/section")
-    public ResponseEntity<CommonResponse<List<CardResponse>>> changeSection(
+    public ResponseEntity<CommonResponse<List<CardCommentResponse>>> changeSection(
             @Valid @RequestBody SectionChangeRequest request) {
         return ResponseEntity.status(HttpStatus.OK.value())
-                .body(CommonResponse.<List<CardResponse>>builder()
+                .body(CommonResponse.<List<CardCommentResponse>>builder()
                         .msg("section이 변경되었습니다.")
                         .data(cardService.changeSection(request.getCardId(),
                                 request.getNewSectionId(),
@@ -128,16 +127,6 @@ public class CardController {
                 .body(CommonResponse.<Boolean>builder()
                         .msg("삭제 되었습니다.")
                         .data(cardService.deleteUserByCard(userDetails.getUser(), request.getUserId(), cardId))
-                        .build());
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<CommonResponse<List<CardCommentResponse>>> testGetCards(
-            @Valid @RequestBody SectionIdCardRequest request) {
-        return ResponseEntity.status(HttpStatus.OK.value())
-                .body(CommonResponse.<List<CardCommentResponse>>builder()
-                        .msg("조회 되었습니다.")
-                        .data(cardService.testGetCards(request.getSectionId()))
                         .build());
     }
 }
