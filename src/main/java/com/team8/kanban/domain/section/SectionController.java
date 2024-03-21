@@ -30,12 +30,12 @@ public class SectionController {
     }
 
     @GetMapping("/{boardId}/sections")
-    public ResponseEntity<CommonResponse<List<SectionResponseDto>>> getAllSection(
+    public ResponseEntity<CommonResponse<List<SectionCardResponseDto>>> getAllSection(
             @PathVariable Long boardId
     ) {
-        List<SectionResponseDto> response = sectionServiceImpl.sortSection(boardId);
+        List<SectionCardResponseDto> response = sectionServiceImpl.sortSection(boardId);
         return ResponseEntity.status(HttpStatus.OK.value())
-                .body(CommonResponse.<List<SectionResponseDto>>builder()
+                .body(CommonResponse.<List<SectionCardResponseDto>>builder()
                         .msg("섹션이 조회되었습니다.")
                         .data(response)
                         .build());
@@ -73,14 +73,14 @@ public class SectionController {
     }
 
     @PostMapping("/{boardId}/sections/position")
-    public ResponseEntity<CommonResponse<List<SectionResponseDto>>> updatePos(
+    public ResponseEntity<CommonResponse<List<SectionCardResponseDto>>> updatePos(
             @PathVariable Long boardId,
             @RequestParam Long selectedSectionId,
             @RequestParam Long changeSectionId
     ) {
-        List<SectionResponseDto> response = sectionServiceImpl.updateNextpos(selectedSectionId, changeSectionId, boardId);
+        List<SectionCardResponseDto> response = sectionServiceImpl.updateNextpos(selectedSectionId, changeSectionId, boardId);
         return ResponseEntity.status(HttpStatus.OK.value())
-                .body(CommonResponse.<List<SectionResponseDto>>builder()
+                .body(CommonResponse.<List<SectionCardResponseDto>>builder()
                         .msg("섹션 위치가 변경었습니다.")
                         .data(response)
                         .build());

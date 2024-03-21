@@ -7,17 +7,18 @@ import static com.team8.kanban.global.exception.ErrorCode.NOT_BOARD_CREATED_USER
 
 import com.team8.kanban.domain.board.dto.BoardRequestDto;
 import com.team8.kanban.domain.board.dto.BoardResponseDto;
+import com.team8.kanban.domain.board.dto.BoardSectionResponseDto;
 import com.team8.kanban.domain.board.dto.BoardUserRequestDto;
 import com.team8.kanban.domain.board.dto.BoardUserResponseDto;
 import com.team8.kanban.domain.board.entity.Board;
 import com.team8.kanban.domain.board.entity.BoardUser;
+import com.team8.kanban.domain.board.repository.BoardQueryRepository;
 import com.team8.kanban.domain.board.repository.BoardRepository;
 import com.team8.kanban.domain.board.repository.BoardUserRepository;
 import com.team8.kanban.domain.user.User;
 import com.team8.kanban.domain.user.UserRepository;
 import com.team8.kanban.global.exception.customException.NotAuthorizedException;
 import com.team8.kanban.global.exception.customException.NotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final BoardUserRepository boardUserRepository;
+    private final BoardQueryRepository boardQueryRepository;
     private final UserRepository userRepository;
 
     @Override
@@ -46,15 +48,16 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardResponseDto> getBoard(User user) {
-        List<BoardUser> boardUsers = boardUserRepository.findAllByUserId(user.getId());
-        List<Board> boards = new ArrayList<>();
+    public List<BoardSectionResponseDto> getAllBoards(User user) {
 
-        for (BoardUser boardUser : boardUsers) {
-            boards.add(boardUser.getBoard());
-        }
+        return boardQueryRepository.findAllBoardTest(user);
 
-        return boards.stream().map(BoardResponseDto::new).toList();
+    }
+
+    @Override
+    public BoardSectionResponseDto getBoard(User user, Long boardId) {
+
+        return boardQueryRepository.findBoard(boardId, user);
     }
 
     @Override

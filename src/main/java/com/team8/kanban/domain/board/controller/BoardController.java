@@ -2,6 +2,7 @@ package com.team8.kanban.domain.board.controller;
 
 import com.team8.kanban.domain.board.dto.BoardRequestDto;
 import com.team8.kanban.domain.board.dto.BoardResponseDto;
+import com.team8.kanban.domain.board.dto.BoardSectionResponseDto;
 import com.team8.kanban.domain.board.service.BoardService;
 import com.team8.kanban.global.common.CommonResponse;
 import com.team8.kanban.global.security.UserDetailsImpl;
@@ -38,12 +39,25 @@ public class BoardController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse<List<BoardResponseDto>>> getBoards(
+    public ResponseEntity<CommonResponse<List<BoardSectionResponseDto>>> getAllBoards(
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<BoardResponseDto> boardResponseDtos = boardService.getBoard(userDetails.getUser());
+        List<BoardSectionResponseDto> boardSectionResponseDtos = boardService.getAllBoards(
+            userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK.value())
-            .body(CommonResponse.<List<BoardResponseDto>>builder().data(boardResponseDtos)
+            .body(CommonResponse.<List<BoardSectionResponseDto>>builder()
+                .data(boardSectionResponseDtos)
                 .msg("보드 조회 완료").build());
+    }
+
+    @GetMapping("/{boardId}")
+    public ResponseEntity<CommonResponse<BoardSectionResponseDto>> getBoard(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable Long boardId) {
+        BoardSectionResponseDto boardSectionResponseDto = boardService.getBoard(
+            userDetails.getUser(), boardId);
+        return ResponseEntity.status(HttpStatus.OK.value())
+            .body(CommonResponse.<BoardSectionResponseDto>builder().data(boardSectionResponseDto)
+                .msg("보드 섹션 조회 완료").build());
     }
 
     @PutMapping("/{boardId}")
