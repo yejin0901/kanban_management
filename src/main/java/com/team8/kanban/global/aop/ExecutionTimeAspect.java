@@ -26,7 +26,7 @@ public class ExecutionTimeAspect {
     @Pointcut("execution(* com.team8.kanban.domain.section.SectionController.*(..))")
     public void sectionControllerMethods() {}
 
-    @Pointcut("execution(* com.team8.kanban.domain.board.controller.BoardUserController*(..))")
+    @Pointcut("execution(* com.team8.kanban.domain.board.controller.BoardUserController.*(..))")
     public void boardUserControllerMethods() {
     }
 
