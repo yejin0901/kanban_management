@@ -1,6 +1,8 @@
 package com.team8.kanban.domain.card.entity;
 
+import com.team8.kanban.domain.board.entity.Board;
 import com.team8.kanban.domain.card.dto.UpdateCardRequest;
+import com.team8.kanban.domain.section.Section;
 import com.team8.kanban.global.entity.ColorEnum;
 import com.team8.kanban.global.entity.TimeStamped;
 import jakarta.persistence.*;

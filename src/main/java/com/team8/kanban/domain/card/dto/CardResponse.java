@@ -1,11 +1,14 @@
 package com.team8.kanban.domain.card.dto;
 
+import com.team8.kanban.domain.card.entity.Card;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collector;
 
 
 @Getter
@@ -24,4 +27,8 @@ public class CardResponse {
     private Long sectionId;
     private Long position;
 
+    public CardResponse(Card card) {
+        this.cardId =card.getCardId();
+        this.cardName = getCardName();
+    }
 }

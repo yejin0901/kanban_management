@@ -1,7 +1,5 @@
 package com.team8.kanban.domain.section;
 
-import com.team8.kanban.global.common.CommonResponse;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +11,9 @@ public interface SectionService {
 
     void deleteSection(Long sectionId, Long boardId);
 
-    List<SectionResponseDto> sortSection(Long boardId);
+    List<SectionCardResponseDto> sortSection(Long boardId);
+    List<SectionCardResponseDto> getc();
     SectionResponseDto updateSection(Long sectionId, SectionRequestDto requestDto, Long boardId);
 
-    List<SectionResponseDto> updateNextpos(Long selectedSectionId,Long changeSectionId, Long boardId);
+    List<SectionCardResponseDto> updateNextpos(Long selectedSectionId, Long changeSectionId, Long boardId);
 }

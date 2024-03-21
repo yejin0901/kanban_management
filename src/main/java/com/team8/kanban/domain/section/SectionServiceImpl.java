@@ -60,9 +60,9 @@ public class SectionServiceImpl implements SectionService {
         return new SectionResponseDto(section);
     }
 
-    public List<SectionResponseDto> sortSection(Long boardId) {
+    public List<SectionCardResponseDto> sortSection(Long boardId) {
         validateBoard(boardId);
-        long start = sectionRepository.findHeadEntities().getId(); //head
+        long start = sectionRepository.findHeadEntities(boardId).getId(); //head
         Section cur = findById(start);//head cur
         List<Section> orderedList = new ArrayList<>();
 
@@ -74,7 +74,12 @@ public class SectionServiceImpl implements SectionService {
             }
             cur = findById(nextSection);
         }
-        return orderedList.stream().map(SectionResponseDto::new).toList();
+        List<SectionResponseDto> sectionResponseDto = orderedList.stream().map(SectionResponseDto::new).toList();
+        return getAllSections(sectionResponseDto);
+    }
+
+    public List<SectionCardResponseDto> getAllSections(List<SectionResponseDto> sectionList){
+        return sectionRepository.findSectionAndCard(sectionList);
     }
 
     /* Linked List SWAP CASE(4)
@@ -84,7 +89,7 @@ public class SectionServiceImpl implements SectionService {
     4. normal
      */
     @Transactional
-    public List<SectionResponseDto> updateNextpos(Long selectPos, Long changePos, Long boardId) {
+    public List<SectionCardResponseDto> updateNextpos(Long selectPos, Long changePos, Long boardId) {
         validateBoard(boardId);
         Section selectedSection = findById(selectPos);
         Section changePosSection = findById(changePos);
@@ -118,6 +123,11 @@ public class SectionServiceImpl implements SectionService {
         b.updateNextPos(a.getNext());
         prev.updateNextPos(a.getId());
         a.updateNextPos(b.getId());
+    }
+
+    public List<SectionCardResponseDto> getc(){
+//        return sectionRepository.findSectionAndCard();
+        return null;
     }
 
 
