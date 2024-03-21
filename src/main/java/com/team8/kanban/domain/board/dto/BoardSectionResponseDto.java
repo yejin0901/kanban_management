@@ -12,16 +12,13 @@ public class BoardSectionResponseDto {
     private String boardName;
     private String boardColor;
     private Long createdUserId;
-    private List<BoardUserResponseDto> boardUserResponseDtos;
     private List<SectionResponseDto> sectionResponseDtos;
 
-    public BoardSectionResponseDto(Board board, List<BoardUserResponseDto> boardUserResponseDtos,
-        List<SectionResponseDto> sectionResponseDtos) {
+    public BoardSectionResponseDto(Board board, List<SectionResponseDto> sectionResponseDtos) {
         this.boardId = board.getBoardId();
         this.boardName = board.getBoardName();
         this.boardColor = board.getBoardColor().toString();
         this.createdUserId = board.getCreatedUserId();
-        this.boardUserResponseDtos = boardUserResponseDtos;
         this.sectionResponseDtos = sectionResponseDtos;
     }
 }

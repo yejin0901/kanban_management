@@ -25,7 +25,7 @@ public interface BoardService {
      * @param user 로그인한 유저 정보
      * @return 소유한 보드 리스트
      */
-    List<BoardSectionResponseDto> getAllBoards(User user);
+    List<BoardResponseDto> getAllBoards(User user);
 
     /**
      * 보드 수정

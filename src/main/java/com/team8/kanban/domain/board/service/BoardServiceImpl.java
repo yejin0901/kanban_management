@@ -19,6 +19,7 @@ import com.team8.kanban.domain.user.User;
 import com.team8.kanban.domain.user.UserRepository;
 import com.team8.kanban.global.exception.customException.NotAuthorizedException;
 import com.team8.kanban.global.exception.customException.NotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -48,16 +49,24 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardSectionResponseDto> getAllBoards(User user) {
-
-        return boardQueryRepository.findAllBoardTest(user);
-
+    public List<BoardResponseDto> getAllBoards(User user) {
+        List<BoardUser> boardUsers = boardUserRepository.findAllByUserId(user.getId());
+        List<BoardResponseDto> boardResponseDtos = new ArrayList<>();
+        for (BoardUser boardUser : boardUsers) {
+            Board board = boardRepository.findById(boardUser.getBoard().getBoardId()).orElseThrow(
+                () -> new NotFoundException(BOARD_NOT_FOUND)
+            );
+            boardResponseDtos.add(new BoardResponseDto(board));
+        }
+        return boardResponseDtos;
     }
 
     @Override
     public BoardSectionResponseDto getBoard(User user, Long boardId) {
+        Board board = findBoard(boardId);
+        validateUser(user, board);
 
-        return boardQueryRepository.findBoard(boardId, user);
+        return boardQueryRepository.findBoard(board);
     }
 
     @Override
