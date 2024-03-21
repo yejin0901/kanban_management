@@ -2,6 +2,7 @@ package com.team8.kanban.domain.board.service;
 
 import com.team8.kanban.domain.board.dto.BoardRequestDto;
 import com.team8.kanban.domain.board.dto.BoardResponseDto;
+import com.team8.kanban.domain.board.dto.BoardSectionResponseDto;
 import com.team8.kanban.domain.board.dto.BoardUserRequestDto;
 import com.team8.kanban.domain.board.dto.BoardUserResponseDto;
 import com.team8.kanban.domain.user.User;
@@ -24,7 +25,7 @@ public interface BoardService {
      * @param user 로그인한 유저 정보
      * @return 소유한 보드 리스트
      */
-    List<BoardResponseDto> getBoard(User user);
+    List<BoardSectionResponseDto> getAllBoards(User user);
 
     /**
      * 보드 수정
@@ -74,4 +75,8 @@ public interface BoardService {
      */
     List<BoardUserResponseDto> deleteBoardUser(User user, Long boardId,
         BoardUserRequestDto boardUserRequestDto);
+
+    BoardSectionResponseDto getBoard(User user, Long boardId);
 }
+
+
