@@ -1,4 +1,5 @@
 package com.team8.kanban.section;
+
 import com.team8.kanban.domain.board.entity.Board;
 import com.team8.kanban.domain.section.Section;
 import com.team8.kanban.domain.section.SectionRepository;
@@ -20,10 +21,7 @@ public class SectionRepositoryTest {
     Section section2;
     Section section3;
 
-
-
-
-    void setup(){
+    void setup() {
     }
 
 }

@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collector;
 
 
 @Getter
@@ -27,8 +25,9 @@ public class CardResponse {
     private Long sectionId;
     private Long position;
 
+    // query dsl 사용 시, 이용했습니다.
     public CardResponse(Card card) {
-        this.cardId =card.getCardId();
+        this.cardId = card.getCardId();
         this.cardName = getCardName();
     }
 }

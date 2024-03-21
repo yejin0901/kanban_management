@@ -1,8 +1,6 @@
 package com.team8.kanban.domain.card.entity;
 
-import com.team8.kanban.domain.board.entity.Board;
 import com.team8.kanban.domain.card.dto.UpdateCardRequest;
-import com.team8.kanban.domain.section.Section;
 import com.team8.kanban.global.entity.ColorEnum;
 import com.team8.kanban.global.entity.TimeStamped;
 import jakarta.persistence.*;
@@ -12,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Builder
@@ -43,10 +40,10 @@ public class Card extends TimeStamped {
     private Long position;
 
     public void update(UpdateCardRequest request) {
-        if(request.getCardName() != null) this.cardName = request.getCardName();
-        if(request.getDescription() != null) this.description = request.getDescription();
-        if(request.getExpiredDate() != null) this.expiredDate = request.getExpiredDate();
-        if(request.getColor() != null) this.colorEnum = ColorEnum.valueOf(request.getColor());
+        if (request.getCardName() != null) this.cardName = request.getCardName();
+        if (request.getDescription() != null) this.description = request.getDescription();
+        if (request.getExpiredDate() != null) this.expiredDate = request.getExpiredDate();
+        if (request.getColor() != null) this.colorEnum = ColorEnum.valueOf(request.getColor());
     }
 
     public void setPosition(long position) {

@@ -135,6 +135,7 @@ public class SectionServiceImpl implements SectionService {
         return sectionRepository.findById(id).orElseThrow(() -> new NotFoundException(SECTION_NOT_FOUND));
     }
 
+
     private Section findByNext(Long pos) {
         return sectionRepository.findByNext(pos).orElse(null);
     }
