@@ -1,6 +1,7 @@
 package com.team8.kanban.domain.comment;
 
-import com.team8.kanban.domain.card.Card;
+
+import com.team8.kanban.domain.card.entity.Card;
 import com.team8.kanban.domain.user.User;
 import com.team8.kanban.global.entity.TimeStamped;
 import jakarta.persistence.*;

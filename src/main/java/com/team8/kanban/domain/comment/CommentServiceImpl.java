@@ -1,7 +1,8 @@
 package com.team8.kanban.domain.comment;
 
-import com.team8.kanban.domain.card.Card;
-import com.team8.kanban.domain.card.CardRepository;
+
+import com.team8.kanban.domain.card.entity.Card;
+import com.team8.kanban.domain.card.repository.CardRepository;
 import com.team8.kanban.domain.comment.dto.CommentRequest;
 import com.team8.kanban.domain.comment.dto.CommentResponse;
 import com.team8.kanban.domain.user.User;

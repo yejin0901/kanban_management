@@ -1,8 +1,10 @@
-package com.team8.kanban.domain.card;
+package com.team8.kanban.domain.card.repository;
 
 
 import com.querydsl.core.types.Projections;
 import com.team8.kanban.domain.card.dto.CardResponse;
+import com.team8.kanban.domain.card.entity.Card;
+import com.team8.kanban.domain.card.entity.QCard;
 import com.team8.kanban.domain.user.QUser;
 import com.team8.kanban.global.config.JpaConfig;
 import lombok.RequiredArgsConstructor;

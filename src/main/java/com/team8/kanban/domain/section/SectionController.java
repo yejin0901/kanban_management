@@ -10,16 +10,17 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/boards/sections")
+@RequestMapping("/boards")
 public class SectionController {
 
     private final SectionService sectionServiceImpl;
 
-    @PostMapping
+    @PostMapping("/{boardId}/sections")
     public ResponseEntity<CommonResponse<SectionResponseDto>> createSection(
+            @PathVariable Long boardId,
             @RequestBody SectionRequestDto requestDto
     ) {
-        SectionResponseDto response = sectionServiceImpl.createSection(requestDto);
+        SectionResponseDto response = sectionServiceImpl.createSection(requestDto, boardId);
         return ResponseEntity.status(HttpStatus.OK.value())
                 .body(CommonResponse.<SectionResponseDto>builder()
                         .msg("섹션이 생성되었습니다.")
@@ -28,9 +29,11 @@ public class SectionController {
 
     }
 
-    @GetMapping
-    public ResponseEntity<CommonResponse<List<SectionResponseDto>>> getAllSection() {
-        List<SectionResponseDto> response = sectionServiceImpl.getAllSection();
+    @GetMapping("/{boardId}/sections")
+    public ResponseEntity<CommonResponse<List<SectionResponseDto>>> getAllSection(
+            @PathVariable Long boardId
+    ) {
+        List<SectionResponseDto> response = sectionServiceImpl.sortSection(boardId);
         return ResponseEntity.status(HttpStatus.OK.value())
                 .body(CommonResponse.<List<SectionResponseDto>>builder()
                         .msg("섹션이 조회되었습니다.")
@@ -39,12 +42,13 @@ public class SectionController {
 
     }
 
-    @DeleteMapping("/{sectionId}")
+    @DeleteMapping("/{boardId}/sections/{sectionId}")
     public ResponseEntity<CommonResponse<SectionResponseDto>> deleteSection(
+            @PathVariable Long boardId,
             @PathVariable Long sectionId
 
     ) {
-        sectionServiceImpl.deleteSection(sectionId);
+        sectionServiceImpl.deleteSection(sectionId, boardId);
         return ResponseEntity.status(HttpStatus.OK.value())
                 .body(CommonResponse.<SectionResponseDto>builder()
                         .msg("섹션이 삭제되었습니다.")
@@ -52,13 +56,14 @@ public class SectionController {
 
     }
 
-    @PatchMapping("/{sectionId}")
+    @PatchMapping("/{boardId}/sections/{sectionId}")
     public ResponseEntity<CommonResponse<SectionResponseDto>> updateSection(
+            @PathVariable Long boardId,
             @PathVariable Long sectionId,
             @RequestBody SectionRequestDto requestDto
 
     ) {
-        SectionResponseDto response = sectionServiceImpl.updateSection(sectionId, requestDto);
+        SectionResponseDto response = sectionServiceImpl.updateSection(sectionId, requestDto, boardId);
         return ResponseEntity.status(HttpStatus.OK.value())
                 .body(CommonResponse.<SectionResponseDto>builder()
                         .msg("섹션이 수정되었습니다.")
@@ -67,12 +72,13 @@ public class SectionController {
 
     }
 
-    @PostMapping("/position")
+    @PostMapping("/{boardId}/sections/position")
     public ResponseEntity<CommonResponse<List<SectionResponseDto>>> updatePos(
+            @PathVariable Long boardId,
             @RequestParam Long selectedSectionId,
             @RequestParam Long changeSectionId
     ) {
-        List<SectionResponseDto> response = sectionServiceImpl.updateNextpos(selectedSectionId, changeSectionId);
+        List<SectionResponseDto> response = sectionServiceImpl.updateNextpos(selectedSectionId, changeSectionId, boardId);
         return ResponseEntity.status(HttpStatus.OK.value())
                 .body(CommonResponse.<List<SectionResponseDto>>builder()
                         .msg("섹션 위치가 변경었습니다.")

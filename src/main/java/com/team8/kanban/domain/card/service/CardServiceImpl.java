@@ -1,22 +1,29 @@
-package com.team8.kanban.domain.card;
+package com.team8.kanban.domain.card.service;
 
 import com.team8.kanban.domain.card.dto.CardResponse;
 import com.team8.kanban.domain.card.dto.CreateCardRequest;
 import com.team8.kanban.domain.card.dto.UpdateCardRequest;
+import com.team8.kanban.domain.card.entity.Card;
+import com.team8.kanban.domain.card.entity.CardUser;
+import com.team8.kanban.domain.card.repository.CardRepository;
+import com.team8.kanban.domain.card.repository.CardUserRepository;
 import com.team8.kanban.domain.user.User;
+import com.team8.kanban.domain.user.UserRepository;
 import com.team8.kanban.global.entity.ColorEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class CardServiceImpl implements CardService {
 
     private final CardRepository cardRepository;
+    private final CardUserRepository cardUserRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -63,17 +70,12 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional
-    public List<CardResponse> changePosition(Long sectionId, String cardIdSet) {
-        long[] idByCard = Arrays.stream(cardIdSet.split("_"))
-                .mapToLong(Long::parseLong)
-                .toArray();
-        List<Card> positionUpdateByCards = cardRepository.findCardsBySectionId(sectionId);
+    public List<CardResponse> changePosition(Long sectionId, Long[] cardIdSet) {
+        List<Card> positionUpdateByCards = findCardInSectionOrderByCardId(sectionId);
 
-        //idByCard: 13 3 2 1 14 12
-        for (int i = 0; i < idByCard.length; i++) {
-            //positionUpdateByCard: 1 2 3 14 13 12
+        for (int i = 0; i < cardIdSet.length; i++) {
             for (int j = 0; j < positionUpdateByCards.size(); j++) {
-                if (idByCard[i] == positionUpdateByCards.get(j).getCardId()) {
+                if (cardIdSet[i] == positionUpdateByCards.get(j).getCardId()) {
                     positionUpdateByCards.get(j).setPosition(i);
                     continue;
                 }
@@ -85,28 +87,21 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional
-    public List<CardResponse> changeSection(Long cardId, Long newSectionId, String newSectionIdSet, Long cardPosition) {
+    public List<CardResponse> changeSection(Long cardId, Long newSectionId, Long[] newSectionIdSet, Long cardPosition) {
         Card sectionUpdateCard = findCard(cardId);
         sectionUpdateCard.setSection(newSectionId);
         cardRepository.save(sectionUpdateCard);
 
-        //cardId 10, cardPositionId 2 ,newSectionIdSet 9_8_7_6_5_4 -> 9_8_10_7_6_5_4
-        long[] idByCard = Arrays.stream(newSectionIdSet.split("_"))
-                .mapToLong(Long::parseLong)
-                .toArray();
-
-        /////////////////////
-
-        long[] idByCardAddPositionId = new long[idByCard.length + 1];
+        long[] idByCardAddPositionId = new long[newSectionIdSet.length + 1];
         for (int i = 0; i < cardPosition; i++) {
-            idByCardAddPositionId[i] = idByCard[i];
+            idByCardAddPositionId[i] = newSectionIdSet[i];
         }
         idByCardAddPositionId[Math.toIntExact(cardPosition)] = cardId;
         for (int i = (int) (cardPosition + 1); i < idByCardAddPositionId.length; i++) {
-            idByCardAddPositionId[i] = idByCard[i - 1];
+            idByCardAddPositionId[i] = newSectionIdSet[i - 1];
         }
 
-        List<Card> positionUpdateByCards = cardRepository.findCardsBySectionId(newSectionId);
+        List<Card> positionUpdateByCards = findCardInSectionOrderByCardId(newSectionId);
 
         for (int i = 0; i < idByCardAddPositionId.length; i++) {
             //positionUpdateByCard: 1 2 3 14 13 12
@@ -121,10 +116,52 @@ public class CardServiceImpl implements CardService {
         return cardRepository.findCards(newSectionId);
     }
 
+    @Override
+    @Transactional
+    public Boolean addUserByCard(User user, Long userId, Long cardId) {
+        checkOwnerCard(user.getId(), cardId);
+        Card card = findCard(cardId);
+        User addUser = findUser(userId);
+
+        CardUser checkUser = findUserInCard(addUser.getId(), card.getCardId());
+        if (!Objects.isNull(checkUser)) {
+            throw new IllegalArgumentException("이미 공동작성자인 유저 입니다.");
+        }
+
+        CardUser addUserInCard = new CardUser(card, addUser);
+        cardUserRepository.save(addUserInCard);
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public Boolean deleteUserByCard(User user, Long userId, Long cardId) {
+        checkOwnerCard(user.getId(), cardId);
+        Card card = findCard(cardId);
+        User addUser = findUser(userId);
+
+        CardUser cardUser = findUserInCard(addUser.getId(), card.getCardId());
+
+        if (Objects.isNull(cardUser)) {
+            throw new IllegalArgumentException("공동작성자로 등록되지 않은 유저입니다.");
+        }
+
+        cardUserRepository.delete(cardUser);
+        return true;
+    }
+
+    private CardUser findUserInCard(Long userId, Long cardId) {
+        return cardUserRepository.findByUserInCard(userId, cardId);
+    }
 
     private Card findCard(Long cardId) {
         return cardRepository.findById(cardId).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 카드가 없습니다."));
+    }
+
+    private User findUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 유저가 없습니다."));
     }
 
     private void checkOwnerCard(Long userId, Long cardByUserId) {
@@ -132,6 +169,15 @@ public class CardServiceImpl implements CardService {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
     }
+
+    private List<Card> findCardInSectionOrderByCardId(Long sectionId){
+        List<Card> cardList = cardRepository.findCardsBySectionId(sectionId);
+        if(!cardList.isEmpty()){
+            return cardList;
+        }
+        throw new IllegalArgumentException("해당 section에 Card가 존재하지 않습니다.");
+    }
+
 
     private CardResponse toResponse(Card card) {
         return CardResponse.builder()

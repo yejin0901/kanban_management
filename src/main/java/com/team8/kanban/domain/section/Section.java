@@ -1,5 +1,7 @@
 package com.team8.kanban.domain.section;
 
+import com.team8.kanban.domain.board.entity.Board;
+
 import com.team8.kanban.global.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,24 +23,20 @@ public class Section extends TimeStamped {
     @Column
     private Long next;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "board_id", nullable = false)
+    private Board board;
 
-// Entity 생성 후 추가
-//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-//    @JoinColumn(name = "board_id", nullable = false)
-//    private Board board;
-//
-//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-//    @JoinColumn(name = "card_id", nullable = false)
-//    private Card card;
-
-    public Section(SectionRequestDto requestDto) {
+    public Section(SectionRequestDto requestDto, Board board) {
         this.sectionName = requestDto.getSectionName();
+        this.board = board;
+        this.next = null;
     }
 
     public void updateName(String sectionName) {
         this.sectionName = sectionName;
     }
-    public void updatePos(Long next) {
+    public void updateNextPos(Long next) {
         this.next = next;
     }
 }
