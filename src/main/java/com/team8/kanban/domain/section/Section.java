@@ -1,7 +1,7 @@
 package com.team8.kanban.domain.section;
 
 import com.team8.kanban.domain.board.entity.Board;
-import com.team8.kanban.domain.card.Card;
+
 import com.team8.kanban.global.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.Getter;

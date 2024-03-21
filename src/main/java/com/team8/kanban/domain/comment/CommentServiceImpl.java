@@ -1,5 +1,8 @@
 package com.team8.kanban.domain.comment;
 
+
+import com.team8.kanban.domain.card.entity.Card;
+import com.team8.kanban.domain.card.repository.CardRepository;
 import com.team8.kanban.domain.comment.dto.CommentRequest;
 import com.team8.kanban.domain.comment.dto.CommentResponse;
 import com.team8.kanban.domain.user.User;
@@ -14,14 +17,19 @@ import java.util.Objects;
 @Transactional
 public class CommentServiceImpl implements CommentService{
     private final CommentRepository commentRepository;
+    private final CardRepository cardRepository;
     //card_id 넣어야 됨
-    public CommentResponse create(User user, CommentRequest commentRequest , Long CardId) {
-        Comment createComment = new Comment(commentRequest.getContent(), user);
+    public CommentResponse create(User user, CommentRequest commentRequest , Long cardId) {
+
+        Card findCard = cardRepository.findById(cardId).orElseThrow();
+
+        Comment createComment = new Comment(commentRequest.getContent(), user, findCard);
         Comment savedComment = commentRepository.save(createComment);
         return new CommentResponse(savedComment,user);
     }
 
-    public CommentResponse update(User user,Long id,CommentRequest updateCommentRequest, Long CardId) {
+    public CommentResponse update(User user,Long id,CommentRequest updateCommentRequest, Long cardId) {
+
         Comment findComment = commentRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("존재하지 않는 댓글입니다.")
         );
@@ -31,7 +39,7 @@ public class CommentServiceImpl implements CommentService{
         findComment.updateContent(updateCommentRequest.getContent());
         return new CommentResponse(findComment,user);
     }
-    public CommentResponse delete(User user,Long id, Long CardId){
+    public CommentResponse delete(User user,Long id, Long cardId){
         Comment findComment = commentRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("존재하지 않는 댓글입니다.")
         );
@@ -50,4 +58,5 @@ public class CommentServiceImpl implements CommentService{
         );
         return new CommentResponse(comment,comment.getUser());
     }
+
 }
