@@ -86,16 +86,4 @@ public class SectionController {
                         .build());
 
     }
-
-    @GetMapping("/sections/get")
-    public ResponseEntity<CommonResponse<List<SectionCardResponseDto>>> get(
-    ) {
-        List<SectionCardResponseDto> response = sectionServiceImpl.getc();
-        return ResponseEntity.status(HttpStatus.OK.value())
-                .body(CommonResponse.<List<SectionCardResponseDto>>builder()
-                        .msg("섹션 위치가 변경었습니다.")
-                        .data(response)
-                        .build());
-
-    }
 }
