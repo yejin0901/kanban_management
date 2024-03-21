@@ -4,8 +4,8 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class BoardInviteRequestDto {
+public class BoardUserRequestDto {
 
-    private List<Long> invitedUserIds;
+    private List<Long> userIds;
 
 }

@@ -26,11 +26,16 @@ public class ExecutionTimeAspect {
     @Pointcut("execution(* com.team8.kanban.domain.section.SectionController.*(..))")
     public void sectionControllerMethods() {}
 
+    @Pointcut("execution(* com.team8.kanban.domain.board.controller.BoardUserController*(..))")
+    public void boardUserControllerMethods() {
+    }
+
     @Around("boardControllerMethods() || " +
             "userControllerMethods() || " +
             "commentControllerMethods() || " +
             "cardControllerMethods() || " +
-            "sectionControllerMethods()")
+        "sectionControllerMethods() ||" +
+        "boardUserControllerMethods()")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
 
