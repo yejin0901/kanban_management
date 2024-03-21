@@ -78,12 +78,11 @@ public class CardServiceImpl implements CardService {
         List<Card> positionUpdateByCards = findCardInSectionOrderByCardId(sectionId);
 
         for (int i = 0; i < cardIdSet.length; i++) {
-            for (int j = 0; j < positionUpdateByCards.size(); j++) {
-                if (cardIdSet[i] == positionUpdateByCards.get(j).getCardId()) {
-                    positionUpdateByCards.get(j).setPosition(i);
+            for (Card positionUpdateByCard : positionUpdateByCards)
+                if (Objects.equals(cardIdSet[i], positionUpdateByCard.getCardId())) {
+                    positionUpdateByCard.setPosition(i);
                     continue;
                 }
-            }
         }
         cardRepository.saveAll(positionUpdateByCards);
         return cardRepository.findCards(sectionId);
