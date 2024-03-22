@@ -18,6 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -44,7 +45,7 @@ public class CommentServiceTest
     @BeforeEach
     void before(){
 
-        userA = new User("userA", "1234");
+        userA = new User("userA-A", "1234");
         //card = new Card(100000L,"cardName","description", userA.getId(), userA.getUsername(), LocalDateTime.now(), ColorEnum.BLACK,1L,1L);
     }
 
@@ -152,5 +153,29 @@ public class CommentServiceTest
 
         List<CommentResponse> commentsV3 = commentService.getCommentsV3(card.getCardId());
         assertEquals(commentsV3.size(), 100);
+    }
+    @Test
+    @DisplayName("댓글 단건 조회 - 100000개 중 한개")
+    void getComment(){
+        //given
+        CreateCardRequest createCardRequest = CreateCardRequest.builder()
+                .cardName("cardNAme")
+                .description("description")
+                .expiredDate(LocalDateTime.now())
+                .color("RED")
+                .sectionId(1L)
+                .build();
+
+        CardResponse card = cardService.createCard(userA, createCardRequest);
+//        List<CommentResponse> commentResponses = new ArrayList<>();
+//        for (int i = 0 ; i< 100; i++){
+//            commentResponses.add(commentService.create(userA, new CommentRequest("comment" + i), card.getCardId()));
+//        }
+//        //when
+           CommentRequest commentRequest = new CommentRequest("comment756");
+//        System.out.println("commentResponses.get(900).getId() = " + commentResponses.get(900).getId());
+//        System.out.println("commentResponses.get(900).getContent() = " + commentResponses.get(900).getContent());
+        //then
+        System.out.println(commentService.getComment(25L,commentRequest).get(0).getId());
     }
 }
