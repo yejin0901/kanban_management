@@ -1,5 +1,6 @@
 package com.team8.kanban.domain.card.service;
 
+import com.team8.kanban.domain.card.dto.CardCommentResponse;
 import com.team8.kanban.domain.card.dto.CardResponse;
 import com.team8.kanban.domain.card.dto.CreateCardRequest;
 import com.team8.kanban.domain.card.dto.UpdateCardRequest;
@@ -7,10 +8,14 @@ import com.team8.kanban.domain.card.entity.Card;
 import com.team8.kanban.domain.card.entity.CardUser;
 import com.team8.kanban.domain.card.repository.CardRepository;
 import com.team8.kanban.domain.card.repository.CardUserRepository;
+
+import com.team8.kanban.domain.comment.repository.CommentRepository;
 import com.team8.kanban.domain.user.User;
 import com.team8.kanban.domain.user.UserRepository;
 import com.team8.kanban.global.entity.ColorEnum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,16 +29,22 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
     private final CardUserRepository cardUserRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<CardResponse> getCards(Long sectionId) {
-        return cardRepository.findCards(sectionId);
+    public List<CardCommentResponse> getCardsV1(Long sectionId) {
+        return cardRepository.findCardsV1(sectionId);
+    }
+
+    @Override
+    public Slice<CardCommentResponse> getCards(Long sectionId, Pageable pageable) {
+        return cardRepository.findCards(sectionId, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public CardResponse getCard(Long cardId) {
+    public CardCommentResponse getCard(Long cardId) {
         return cardRepository.findCard(cardId);
     }
 
@@ -64,30 +75,30 @@ public class CardServiceImpl implements CardService {
         Card deleteCard = findCard(cardId);
         checkOwnerCard(user.getId(), deleteCard.getUserid());
 
+        commentRepository.deleteAllInBatch(commentRepository.findCommentsByCard_CardId(cardId));
         cardRepository.delete(deleteCard);
         return true;
     }
 
     @Override
     @Transactional
-    public List<CardResponse> changePosition(Long sectionId, Long[] cardIdSet) {
+    public Boolean changePosition(Long sectionId, Long[] cardIdSet) {
         List<Card> positionUpdateByCards = findCardInSectionOrderByCardId(sectionId);
 
         for (int i = 0; i < cardIdSet.length; i++) {
-            for (int j = 0; j < positionUpdateByCards.size(); j++) {
-                if (cardIdSet[i] == positionUpdateByCards.get(j).getCardId()) {
-                    positionUpdateByCards.get(j).setPosition(i);
+            for (Card positionUpdateByCard : positionUpdateByCards)
+                if (Objects.equals(cardIdSet[i], positionUpdateByCard.getCardId())) {
+                    positionUpdateByCard.setPosition(i);
                     continue;
                 }
-            }
         }
         cardRepository.saveAll(positionUpdateByCards);
-        return cardRepository.findCards(sectionId);
+        return true;
     }
 
     @Override
     @Transactional
-    public List<CardResponse> changeSection(Long cardId, Long newSectionId, Long[] newSectionIdSet, Long cardPosition) {
+    public Boolean changeSection(Long cardId, Long newSectionId, Long[] newSectionIdSet, Long cardPosition) {
         Card sectionUpdateCard = findCard(cardId);
         sectionUpdateCard.setSection(newSectionId);
         cardRepository.save(sectionUpdateCard);
@@ -113,7 +124,7 @@ public class CardServiceImpl implements CardService {
             }
         }
         cardRepository.saveAll(positionUpdateByCards);
-        return cardRepository.findCards(newSectionId);
+        return true;
     }
 
     @Override
@@ -170,9 +181,9 @@ public class CardServiceImpl implements CardService {
         }
     }
 
-    private List<Card> findCardInSectionOrderByCardId(Long sectionId){
+    private List<Card> findCardInSectionOrderByCardId(Long sectionId) {
         List<Card> cardList = cardRepository.findCardsBySectionId(sectionId);
-        if(!cardList.isEmpty()){
+        if (!cardList.isEmpty()) {
             return cardList;
         }
         throw new IllegalArgumentException("해당 section에 Card가 존재하지 않습니다.");

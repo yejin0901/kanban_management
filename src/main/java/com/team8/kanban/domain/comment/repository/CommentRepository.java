@@ -27,4 +27,5 @@ public interface CommentRepository extends JpaRepository<Comment,Long> ,CommentR
     @Query("select c from Comment c left join fetch c.user where c.card.cardId =:cardId")
     Slice<Comment> findAllByCardIdV6(Long cardId, Pageable pageable);
 
+    List<Comment> findCommentsByCard_CardId(Long cardId);
 }

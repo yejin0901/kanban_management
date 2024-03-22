@@ -6,6 +6,10 @@ import com.team8.kanban.global.common.CommonResponse;
 import com.team8.kanban.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,27 +25,37 @@ public class CardController {
     private final CardService cardService;
 
     //카드 조회
-    @GetMapping
-    public ResponseEntity<CommonResponse<List<CardResponse>>> getCards(
+    @GetMapping("/v1")
+    public ResponseEntity<CommonResponse<List<CardCommentResponse>>> getCards(
             @Valid @RequestBody SectionIdCardRequest request) {
         return ResponseEntity.status(HttpStatus.OK.value())
-                .body(CommonResponse.<List<CardResponse>>builder()
+                .body(CommonResponse.<List<CardCommentResponse>>builder()
                         .msg("조회 되었습니다.")
-                        .data(cardService.getCards(request.getSectionId()))
+                        .data(cardService.getCardsV1(request.getSectionId()))
+                        .build());
+    }
+
+    @GetMapping
+    public ResponseEntity<CommonResponse<Slice<CardCommentResponse>>> getCardsV2(
+            @Valid @RequestBody SectionIdCardRequest request,
+            @PageableDefault(sort = "position", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK.value())
+                .body(CommonResponse.<Slice<CardCommentResponse>>builder()
+                        .msg("조회 되었습니다.")
+                        .data(cardService.getCards(request.getSectionId(), pageable))
                         .build());
     }
 
     //카드 개별조회
     @GetMapping("/{cardId}")
-    public ResponseEntity<CommonResponse<CardResponse>> getCard(
+    public ResponseEntity<CommonResponse<CardCommentResponse>> getCard(
             @PathVariable Long cardId) {
         return ResponseEntity.status(HttpStatus.OK.value())
-                .body(CommonResponse.<CardResponse>builder()
+                .body(CommonResponse.<CardCommentResponse>builder()
                         .msg("조회 되었습니다.")
                         .data(cardService.getCard(cardId))
                         .build());
     }
-
 
     //카드 입력
     @PostMapping
@@ -82,10 +96,10 @@ public class CardController {
 
     //position 변경
     @PostMapping("/position")
-    public ResponseEntity<CommonResponse<List<CardResponse>>> changePosition(
+    public ResponseEntity<CommonResponse<Boolean>> changePosition(
             @Valid @RequestBody PositionChangeRequest request) {
         return ResponseEntity.status(HttpStatus.OK.value())
-                .body(CommonResponse.<List<CardResponse>>builder()
+                .body(CommonResponse.<Boolean>builder()
                         .msg("position이 변경되었습니다.")
                         .data(cardService.changePosition(request.getSectionId(), request.getPositionSet()))
                         .build());
@@ -93,10 +107,10 @@ public class CardController {
 
     //SectionId 변경
     @PostMapping("/section")
-    public ResponseEntity<CommonResponse<List<CardResponse>>> changeSection(
+    public ResponseEntity<CommonResponse<Boolean>> changeSection(
             @Valid @RequestBody SectionChangeRequest request) {
         return ResponseEntity.status(HttpStatus.OK.value())
-                .body(CommonResponse.<List<CardResponse>>builder()
+                .body(CommonResponse.<Boolean>builder()
                         .msg("section이 변경되었습니다.")
                         .data(cardService.changeSection(request.getCardId(),
                                 request.getNewSectionId(),
