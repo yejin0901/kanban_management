@@ -45,7 +45,7 @@ public class CommentServiceTest
     @BeforeEach
     void before(){
 
-        userA = new User("userA-A", "1234");
+        userA = new User("userA-A-A", "1234");
         //card = new Card(100000L,"cardName","description", userA.getId(), userA.getUsername(), LocalDateTime.now(), ColorEnum.BLACK,1L,1L);
     }
 
@@ -178,4 +178,5 @@ public class CommentServiceTest
         //then
         System.out.println(commentService.getComment(25L,commentRequest).get(0).getId());
     }
+
 }
