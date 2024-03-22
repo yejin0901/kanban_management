@@ -13,6 +13,8 @@ import com.team8.kanban.domain.user.User;
 import com.team8.kanban.domain.user.UserRepository;
 import com.team8.kanban.global.entity.ColorEnum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +32,13 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CardCommentResponse> getCards(Long sectionId) {
-        return cardRepository.findCards(sectionId);
+    public List<CardCommentResponse> getCardsV1(Long sectionId) {
+        return cardRepository.findCardsV1(sectionId);
+    }
+
+    @Override
+    public Slice<CardCommentResponse> getCards(Long sectionId, Pageable pageable) {
+        return cardRepository.findCards(sectionId, pageable);
     }
 
     @Override
@@ -67,14 +74,14 @@ public class CardServiceImpl implements CardService {
         Card deleteCard = findCard(cardId);
         checkOwnerCard(user.getId(), deleteCard.getUserid());
 
-        commentRepository.deleteAll(commentRepository.findCommentsByCard_CardId(cardId));
+        commentRepository.deleteAllInBatch(commentRepository.findCommentsByCard_CardId(cardId));
         cardRepository.delete(deleteCard);
         return true;
     }
 
     @Override
     @Transactional
-    public List<CardCommentResponse> changePosition(Long sectionId, Long[] cardIdSet) {
+    public Boolean changePosition(Long sectionId, Long[] cardIdSet) {
         List<Card> positionUpdateByCards = findCardInSectionOrderByCardId(sectionId);
 
         for (int i = 0; i < cardIdSet.length; i++) {
@@ -85,12 +92,12 @@ public class CardServiceImpl implements CardService {
                 }
         }
         cardRepository.saveAll(positionUpdateByCards);
-        return cardRepository.findCards(sectionId);
+        return true;
     }
 
     @Override
     @Transactional
-    public List<CardCommentResponse> changeSection(Long cardId, Long newSectionId, Long[] newSectionIdSet, Long cardPosition) {
+    public Boolean changeSection(Long cardId, Long newSectionId, Long[] newSectionIdSet, Long cardPosition) {
         Card sectionUpdateCard = findCard(cardId);
         sectionUpdateCard.setSection(newSectionId);
         cardRepository.save(sectionUpdateCard);
@@ -116,7 +123,7 @@ public class CardServiceImpl implements CardService {
             }
         }
         cardRepository.saveAll(positionUpdateByCards);
-        return cardRepository.findCards(newSectionId);
+        return true;
     }
 
     @Override

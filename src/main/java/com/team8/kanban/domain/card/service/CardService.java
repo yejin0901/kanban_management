@@ -5,6 +5,8 @@ import com.team8.kanban.domain.card.dto.CardResponse;
 import com.team8.kanban.domain.card.dto.CreateCardRequest;
 import com.team8.kanban.domain.card.dto.UpdateCardRequest;
 import com.team8.kanban.domain.user.User;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 
@@ -16,7 +18,15 @@ public interface CardService {
      * @param sectionId 조회할 section의 Id값
      * @return 해당 section의 Card Entity
      */
-    List<CardCommentResponse> getCards(Long sectionId);
+    List<CardCommentResponse> getCardsV1(Long sectionId);
+
+    /**
+     * sectionId에 해당하는 section의 전체 카드 조회
+     * @param sectionId 조회할 section의 Id값
+     * @param pageable 페이징처리 값
+     * @return
+     */
+    Slice<CardCommentResponse> getCards(Long sectionId, Pageable pageable);
 
     /**
      * 단일 카드 조회
@@ -59,9 +69,9 @@ public interface CardService {
      *
      * @param sectionId position을 변경할 sectionId
      * @param cardIdSet position으로 정렬했을때의 cardId값의 순서
-     * @return 변경된 position으로 정렬
+     * @return 성공시 true
      */
-    List<CardCommentResponse> changePosition(Long sectionId, Long[] cardIdSet);
+    Boolean changePosition(Long sectionId, Long[] cardIdSet);
 
     /**
      * 카드 section 변경
@@ -70,9 +80,9 @@ public interface CardService {
      * @param newSectionId    이동한 Section Id
      * @param newSectionIdSet 바뀐 Section의 현재 position으로 정렬했을때의 cardId값의 순서
      * @param cardPosition    이동한 Section의 position
-     * @return List<CardResponse> 변경된 section을 정렬 후 조회
+     * @return 성공시 true
      */
-    List<CardCommentResponse> changeSection(Long cardId, Long newSectionId, Long[] newSectionIdSet, Long cardPosition);
+    Boolean changeSection(Long cardId, Long newSectionId, Long[] newSectionIdSet, Long cardPosition);
 
     /**
      * 카드에 공통작업자 추가
