@@ -10,8 +10,8 @@ import java.util.Optional;
 public interface SectionRepository extends JpaRepository<Section, Long>, SectionRepositoryQuery{
     Optional<Section> findByNext(Long next);
 
-    @Query("SELECT s FROM Section s WHERE s.id NOT IN (SELECT sec.next FROM Section sec WHERE sec.next IS NOT NULL) AND s.board.boardId = :boardId")
-    Section findHeadEntities(@Param("boardId") Long boardId);
+    @Query("SELECT s FROM Section s WHERE s.id NOT IN (SELECT sec.next FROM Section sec WHERE sec.next IS NOT NULL)")
+    Section findHeadEntities();
 
     @Query("SELECT s FROM Section s WHERE s.next IS NULL")
     Section findLastSection();
