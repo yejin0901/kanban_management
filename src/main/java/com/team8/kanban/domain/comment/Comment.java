@@ -12,11 +12,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(indexes = @Index(name = "content_cardId",columnList = "content,card_id"))
 public class Comment extends TimeStamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(name = "content")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
