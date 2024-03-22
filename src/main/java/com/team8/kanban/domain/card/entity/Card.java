@@ -14,7 +14,11 @@ import java.time.LocalDateTime;
 @Entity
 @Builder
 @Getter
-@Table(name = "cards")
+@Table(name = "cards", indexes = {
+        @Index(name = "idx_card_name", columnList = "cardName"),
+        @Index(name = "idx_card_id", columnList = "cardId"),
+        @Index(name = "idx_card_sectionId", columnList = "sectionId")
+})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Card extends TimeStamped {
@@ -52,6 +56,5 @@ public class Card extends TimeStamped {
 
     public void setSection(long newSectionId) {
         this.sectionId = newSectionId;
-
     }
 }

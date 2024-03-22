@@ -48,16 +48,16 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardSectionResponseDto> getAllBoards(User user) {
+    public List<BoardResponseDto> getAllBoards(User user) {
 
-        return boardQueryRepository.findAllBoardTest(user);
-
+        return boardQueryRepository.findAllBoard(user);
     }
 
     @Override
     public BoardSectionResponseDto getBoard(User user, Long boardId) {
+        Board board = findBoard(boardId);
 
-        return boardQueryRepository.findBoard(boardId, user);
+        return boardQueryRepository.findBoard(board, user);
     }
 
     @Override
