@@ -4,4 +4,5 @@ import java.util.List;
 
 public interface SectionRepositoryQuery {
     List<SectionCardResponseDto> findSectionAndCard(List<SectionResponseDto> sectionList);
+    SectionProjection findSectionById(Long Id);
 }

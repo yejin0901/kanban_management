@@ -14,4 +14,9 @@ public class SectionResponseDto {
         sectionId = section.getId();
         sectionName = section.getSectionName();
     }
+
+    public SectionResponseDto(SectionProjection section) {
+        sectionId = section.getSectionId();
+        sectionName = section.getSectionName();
+    }
 }
