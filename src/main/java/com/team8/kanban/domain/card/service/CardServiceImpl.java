@@ -8,7 +8,8 @@ import com.team8.kanban.domain.card.entity.Card;
 import com.team8.kanban.domain.card.entity.CardUser;
 import com.team8.kanban.domain.card.repository.CardRepository;
 import com.team8.kanban.domain.card.repository.CardUserRepository;
-import com.team8.kanban.domain.comment.CommentRepository;
+
+import com.team8.kanban.domain.comment.repository.CommentRepository;
 import com.team8.kanban.domain.user.User;
 import com.team8.kanban.domain.user.UserRepository;
 import com.team8.kanban.global.entity.ColorEnum;
