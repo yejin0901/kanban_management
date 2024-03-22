@@ -2,6 +2,7 @@ package com.team8.kanban.domain.board.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.team8.kanban.domain.board.dto.BoardResponseDto;
 import com.team8.kanban.domain.board.dto.BoardSectionResponseDto;
 import com.team8.kanban.domain.board.dto.BoardUserResponseDto;
 import com.team8.kanban.domain.board.entity.Board;
@@ -25,6 +26,16 @@ public class BoardQueryRepository {
     private QSection qSection = QSection.section;
 
     private QBoardUser qBoardUser = QBoardUser.boardUser;
+
+    public List<BoardResponseDto> findAllBoard(User user) {
+        List<Board> boards = jpaQueryFactory
+            .select(qBoardUser.board)
+            .from(qBoardUser)
+            .where(qBoardUser.user.id.eq(user.getId()))
+            .fetch();
+
+        return boards.stream().map(BoardResponseDto::new).toList();
+    }
 
     public BoardSectionResponseDto findBoard(Board board, User user) {
 
