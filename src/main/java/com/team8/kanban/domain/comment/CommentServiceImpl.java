@@ -88,4 +88,8 @@ public class CommentServiceImpl implements CommentService{
         Slice<Comment> comments = commentRepository.findAllByCardIdV6(cardId, pageable);
         return comments.map(CommentResponse::new);
     }
+    public List<CommentResponse> getComment(Long cardId,CommentRequest commentRequest){
+        List<Comment> findComments = commentRepository.findByContent(cardId,commentRequest.getContent());
+        return findComments.stream().map(CommentResponse::new).toList();
+    }
 }

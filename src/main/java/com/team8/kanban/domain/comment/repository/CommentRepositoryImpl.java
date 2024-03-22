@@ -1,6 +1,8 @@
 package com.team8.kanban.domain.comment.repository;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.team8.kanban.domain.comment.Comment;
 import com.team8.kanban.domain.comment.dto.CommentResponse;
 import com.team8.kanban.global.config.JpaConfig;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +29,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom{
                         comment.id,
                         comment.content,
                         comment.user.username.as("writer"),
-                        //user.username.as("writer"),
+                        user.username.as("writer"),
                         comment.createdAt,
                         comment.modifiedAt
                 ))
@@ -37,17 +39,13 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom{
         return result;
     }
 
-
-//    public Page<Comment> findAllPageV2(Pageable pageable){
-//        JPAQueryFactory queryFactory = jpaConfig.jpaQueryFactory();
-//
-//        List<Comment> comments = queryFactory.
-//                selectFrom(comment)
-//                .orderBy(comment.createdAt.desc())
-//                .offset(pageable.getOffset())
-//                .limit(pageable.getPageSize())
-//                .fetch();
-//
-//        return new PageImpl<>(comments, pageable, comments.size());
-//    }
+    public List<Comment> findByContent(Long cardId,String content){
+        JPAQueryFactory queryFactory = jpaConfig.jpaQueryFactory();
+        return queryFactory
+                .select(comment)
+                .from(comment)
+                .join(comment.user,user).fetchJoin()
+                .where(comment.content.eq(content).and(comment.card.cardId.eq(cardId)))
+                .fetch();
+    }
 }

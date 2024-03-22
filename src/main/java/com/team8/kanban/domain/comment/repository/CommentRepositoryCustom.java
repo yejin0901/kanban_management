@@ -13,4 +13,6 @@ import java.util.List;
 public interface CommentRepositoryCustom {
 //    Page<Comment> findAllPageV2(Pageable pageable);
     List<CommentResponse> V2findAllByCardId(Long cardId);
+
+    List<Comment> findByContent(Long cardId,String content);
 }
