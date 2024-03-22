@@ -92,4 +92,15 @@ public class CommentServiceImpl implements CommentService{
         List<Comment> findComments = commentRepository.findByContent(cardId,commentRequest.getContent());
         return findComments.stream().map(CommentResponse::new).toList();
     }
+    public List<CommentResponse> getCommentsAllV1(){
+        List<Comment> comments = commentRepository.findAll();
+        return comments.stream().map(CommentResponse::new).toList();
+    }
+    public List<CommentResponse> getCommentsAllV2(){
+        List<Comment> comments = commentRepository.findAllV2();
+        return comments.stream().map(CommentResponse::new).toList();
+    }
+    public List<CommentResponse> getCommentsAllV3(){
+        return commentRepository.findAllV3();
+    }
 }

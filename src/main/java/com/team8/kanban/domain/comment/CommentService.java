@@ -23,4 +23,7 @@ public interface CommentService {
     Page<CommentResponse> getCommentsV5(Long cardId, Pageable pageable);
     Slice<CommentResponse> getCommentsV6(Long cardId, Pageable pageable);
     List<CommentResponse> getComment(Long cardId, CommentRequest commentRequest);
+    List<CommentResponse> getCommentsAllV1();
+    List<CommentResponse> getCommentsAllV2();
+    List<CommentResponse> getCommentsAllV3();
 }

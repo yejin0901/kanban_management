@@ -15,4 +15,7 @@ public interface CommentRepositoryCustom {
     List<CommentResponse> V2findAllByCardId(Long cardId);
 
     List<Comment> findByContent(Long cardId,String content);
+
+    List<Comment> findAllV2();
+    List<CommentResponse> findAllV3();
 }

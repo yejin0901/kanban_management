@@ -48,4 +48,27 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom{
                 .where(comment.content.eq(content).and(comment.card.cardId.eq(cardId)))
                 .fetch();
     }
+    public List<Comment> findAllV2(){
+        JPAQueryFactory queryFactory = jpaConfig.jpaQueryFactory();
+        return queryFactory
+                .select(comment)
+                .from(comment)
+                .join(comment.user, user).fetchJoin()
+                .fetch();
+    }
+    public List<CommentResponse> findAllV3() {
+        List<CommentResponse> result = jpaConfig.jpaQueryFactory()
+                .select(
+                        Projections.fields(CommentResponse.class,
+                                comment.id,
+                                comment.content,
+                                comment.user.username.as("writer"),
+                                user.username.as("writer"),
+                                comment.createdAt,
+                                comment.modifiedAt
+                        ))
+                .from(comment)
+                .fetch();
+        return result;
+    }
 }
