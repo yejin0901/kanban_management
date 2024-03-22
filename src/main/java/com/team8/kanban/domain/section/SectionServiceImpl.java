@@ -62,9 +62,9 @@ public class SectionServiceImpl implements SectionService {
 
     public List<SectionCardResponseDto> sortSection(Long boardId) {
         validateBoard(boardId);
-        long start = sectionRepository.findHeadEntities(boardId).getId(); //head
-        Section cur = findById(start);//head cur
-        List<Section> orderedList = new ArrayList<>();
+        Long start = sectionRepository.findHeadEntities().getId(); //head
+        SectionProjection cur = sectionRepository.findSectionById(start);//head cur
+        List<SectionProjection> orderedList = new ArrayList<>();
 
         while (cur != null) {
             orderedList.add(cur);
@@ -72,7 +72,7 @@ public class SectionServiceImpl implements SectionService {
             if (nextSection == null) {
                 break;
             }
-            cur = findById(nextSection);
+            cur = sectionRepository.findSectionById(nextSection);
         }
         List<SectionResponseDto> sectionResponseDto = orderedList.stream().map(SectionResponseDto::new).toList();
         return getAllSections(sectionResponseDto);
@@ -123,11 +123,6 @@ public class SectionServiceImpl implements SectionService {
         b.updateNextPos(a.getNext());
         prev.updateNextPos(a.getId());
         a.updateNextPos(b.getId());
-    }
-
-    public List<SectionCardResponseDto> getc(){
-//        return sectionRepository.findSectionAndCard();
-        return null;
     }
 
 

@@ -11,7 +11,10 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @Getter
 @RequiredArgsConstructor
-@Table(name = "sections")
+@Table(name = "sections", indexes = {
+        @Index(name = "idx_user_next", columnList = "next"),
+        @Index(name = "idx_user_id", columnList = "id")
+})
 public class Section extends TimeStamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

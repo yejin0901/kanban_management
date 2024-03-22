@@ -14,9 +14,9 @@ import java.util.List;
 public class SectionCardResponseDto {
     private Long sectionId;
     private String sectionName;
-    private List<CardResponse> cardList = new ArrayList<>();
+    private List<CardProjection> cardList = new ArrayList<>();
 
-    public SectionCardResponseDto(SectionResponseDto s, List<CardResponse> c){
+    public SectionCardResponseDto(SectionResponseDto s, List<CardProjection> c){
         sectionId = s.getSectionId();
         sectionName = s.getSectionName();
         cardList = c;

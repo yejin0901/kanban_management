@@ -12,7 +12,6 @@ public interface SectionService {
     void deleteSection(Long sectionId, Long boardId);
 
     List<SectionCardResponseDto> sortSection(Long boardId);
-    List<SectionCardResponseDto> getc();
     SectionResponseDto updateSection(Long sectionId, SectionRequestDto requestDto, Long boardId);
 
     List<SectionCardResponseDto> updateNextpos(Long selectedSectionId, Long changeSectionId, Long boardId);
