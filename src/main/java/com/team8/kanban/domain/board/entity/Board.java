@@ -3,14 +3,22 @@ package com.team8.kanban.domain.board.entity;
 import com.team8.kanban.domain.board.dto.BoardRequestDto;
 import com.team8.kanban.domain.user.User;
 import com.team8.kanban.global.entity.ColorEnum;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "boards")
+@Table(name = "boards", indexes = {
+    @Index(columnList = "board_id"),
+})
 public class Board {
 
     @Id

@@ -39,13 +39,13 @@ public class BoardController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse<List<BoardSectionResponseDto>>> getAllBoards(
+    public ResponseEntity<CommonResponse<List<BoardResponseDto>>> getAllBoards(
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<BoardSectionResponseDto> boardSectionResponseDtos = boardService.getAllBoards(
+        List<BoardResponseDto> boardResponseDtos = boardService.getAllBoards(
             userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK.value())
-            .body(CommonResponse.<List<BoardSectionResponseDto>>builder()
-                .data(boardSectionResponseDtos)
+            .body(CommonResponse.<List<BoardResponseDto>>builder()
+                .data(boardResponseDtos)
                 .msg("보드 조회 완료").build());
     }
 
