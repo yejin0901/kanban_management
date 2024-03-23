@@ -25,7 +25,6 @@ public class CommentServiceImpl implements CommentService{
     private final CardRepository cardRepository;
 
     public CommentResponse create(User user, CommentRequest commentRequest , Long cardId) {
-
         Card findCard = cardRepository.findById(cardId).orElseThrow();
 
         Comment createComment = new Comment(commentRequest.getContent(), user, findCard);
