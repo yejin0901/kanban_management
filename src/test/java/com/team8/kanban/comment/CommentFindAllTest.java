@@ -40,6 +40,5 @@ public class CommentFindAllTest {
         //when
         System.out.println("commentsAllV1.size() = " + commentsAllV1.size());
         //then
-
     }
 }
