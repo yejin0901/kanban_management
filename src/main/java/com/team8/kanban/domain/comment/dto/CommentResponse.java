@@ -5,11 +5,12 @@ import com.team8.kanban.domain.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class CommentResponse {
+public class CommentResponse implements Serializable {
 
     private Long id;
     private String content;
