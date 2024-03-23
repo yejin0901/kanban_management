@@ -26,4 +26,5 @@ public interface CommentService {
     List<CommentResponse> getCommentsAllV1();
     List<CommentResponse> getCommentsAllV2();
     List<CommentResponse> getCommentsAllV3();
+    List<CommentResponse> getCommentsAllV3Cache();
 }
