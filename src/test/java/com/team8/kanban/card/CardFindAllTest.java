@@ -19,7 +19,7 @@ public class CardFindAllTest {
     private CardService cardService;
 
     @Test
-    @DisplayName("카드조회 - Page처리 X(기준데이터: 30,000건")
+    @DisplayName("카드조회 - Slice X(기준데이터: 30,000건")
     void getCard() {
         //given
         SectionIdCardRequest request = SectionIdCardRequest.builder().sectionId(2L).build();
@@ -35,7 +35,7 @@ public class CardFindAllTest {
     }
 
     @Test
-    @DisplayName("카드조회 - Page처리 O(기준데이터: 30,000건")
+    @DisplayName("카드조회 - Slice O(기준데이터: 30,000건")
     void getCardV2() {
         //given
         SectionIdCardRequest request = SectionIdCardRequest.builder().sectionId(2L).build();
