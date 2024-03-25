@@ -130,8 +130,8 @@ public class CardServiceImpl implements CardService {
     @Override
     @Transactional
     public Boolean addUserByCard(User user, Long userId, Long cardId) {
-        checkOwnerCard(user.getId(), cardId);
         Card card = findCard(cardId);
+        checkOwnerCard(user.getId(), card.getUserid());
         User addUser = findUser(userId);
 
         CardUser checkUser = findUserInCard(addUser.getId(), card.getCardId());
@@ -147,8 +147,8 @@ public class CardServiceImpl implements CardService {
     @Override
     @Transactional
     public Boolean deleteUserByCard(User user, Long userId, Long cardId) {
-        checkOwnerCard(user.getId(), cardId);
         Card card = findCard(cardId);
+        checkOwnerCard(user.getId(), card.getUserid());
         User addUser = findUser(userId);
 
         CardUser cardUser = findUserInCard(addUser.getId(), card.getCardId());

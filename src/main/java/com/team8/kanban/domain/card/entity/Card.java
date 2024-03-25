@@ -17,7 +17,8 @@ import java.time.LocalDateTime;
 @Table(name = "cards", indexes = {
         @Index(name = "idx_card_name", columnList = "cardName"),
         @Index(name = "idx_card_id", columnList = "cardId"),
-        @Index(name = "idx_card_sectionId", columnList = "sectionId")
+        @Index(name = "idx_card_sectionId", columnList = "sectionId"),
+        @Index(name = "idx_position", columnList = "position")
 })
 @NoArgsConstructor
 @AllArgsConstructor
